@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../redux/actions/AuthSlice';
 import { NavbarDefault } from '../../components/Navbar';
 import { SimpleFooter } from '../../components/Footer';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function SimpleRegistrationForm() {
 	const { loading, error } = useSelector((state) => state.authLogin);
@@ -15,23 +16,33 @@ export default function SimpleRegistrationForm() {
 	const [password, setPassword] = useState('');
 
 	useEffect(() => {
-		if (loading === 'succeeded') {
+		if (loading === 200) {
 			navigate('/dashboard');
 		} else if (error) {
-			toast.error(`Login failed: ${error}`);
+			if (error.includes('409')) {
+				toast.error('Tài khoản đã tồn tại');
+			} else toast.error(`Registration failed: ${error}`);
 		}
-	});
+	}, [loading, error, navigate]);
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.log(email, password);
 		const response = await dispatch(login({ email, password }));
 		localStorage.setItem('accessToken', response.payload.accessToken);
 		localStorage.setItem('refreshToken', response.payload.refreshToken);
+
+		if (response.payload.refreshToken && response.payload.accessToken) {
+			navigate('/dashboard');
+		}
+
+		setEmail('');
+		setPassword('');
 	};
 
 	return (
 		<div>
 			<NavbarDefault />
+			<ToastContainer />
 			<div className='flex min-h-full flex-1 flex-col justify-center px-6 py-28 lg:px-8'>
 				<div className='sm:mx-auto sm:w-full sm:max-w-sm'>
 					<img

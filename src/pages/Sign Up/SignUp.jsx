@@ -33,6 +33,13 @@ export default function SimpleRegistrationForm() {
 		);
 		localStorage.setItem('accessToken', response.payload.accessToken);
 		localStorage.setItem('refreshToken', response.payload.refreshToken);
+
+		if (response.payload) {
+			navigate('/dashboard');
+		}
+
+		setEmail('');
+		setPassword('');
 	};
 
 	return (

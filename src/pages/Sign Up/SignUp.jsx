@@ -34,12 +34,13 @@ export default function SimpleRegistrationForm() {
 		localStorage.setItem('accessToken', response.payload.accessToken);
 		localStorage.setItem('refreshToken', response.payload.refreshToken);
 
-		if (response.payload) {
+		if (response.payload.refreshToken && response.payload.accessToken) {
 			navigate('/dashboard');
 		}
 
 		setEmail('');
 		setPassword('');
+		setUsername('');
 	};
 
 	return (

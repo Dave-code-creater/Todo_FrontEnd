@@ -25,6 +25,7 @@ import {
 import { logout } from '../redux/actions/AuthSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import Account1 from './UpdateProfile';
 export default function MultiLevelSidebar() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -32,6 +33,13 @@ export default function MultiLevelSidebar() {
 		dispatch(logout());
 		navigate('/');
 	};
+
+	const handleProfile = () => {
+		navigate('/profile');
+	}
+	const handleNavbar = () => {
+		navigate('/dashboard');
+	}
 
 	return (
 		<Card className='h-[calc(100vh)] max-w-[20rem] p-10 sticky top-0'>
@@ -55,8 +63,8 @@ export default function MultiLevelSidebar() {
 					</ListItemPrefix>
 					<Typography
 						variant='button'
-						onClick={() => alert('Dashboard')}>
-						Dashboard
+						onClick={() => handleNavbar()}>
+						Trang chủ
 					</Typography>
 				</ListItem>
 
@@ -67,7 +75,7 @@ export default function MultiLevelSidebar() {
 					<Typography
 						variant='button'
 						onClick={() => alert('Products')}>
-						Products
+						Kế hoạch làm việc
 					</Typography>
 				</ListItem>
 
@@ -77,8 +85,8 @@ export default function MultiLevelSidebar() {
 					</ListItemPrefix>
 					<Typography
 						variant='button'
-						onClick={() => alert('Customers')}>
-						Customers
+						onClick={() => handleProfile()}>
+						Trang cá nhân
 					</Typography>
 				</ListItem>
 
@@ -89,7 +97,7 @@ export default function MultiLevelSidebar() {
 					<Typography
 						variant='button'
 						onClick={() => alert('Settings')}>
-						Settings
+						Cài đặt
 					</Typography>
 				</ListItem>
 
@@ -100,7 +108,7 @@ export default function MultiLevelSidebar() {
 					<Typography
 						variant='button'
 						onClick={() => alert('Inbox')}>
-						Inbox
+						Thông báo
 					</Typography>
 				</ListItem>
 
@@ -111,7 +119,7 @@ export default function MultiLevelSidebar() {
 					<Typography
 						variant='button'
 						onClick={() => handleLogout()}>
-						Logout
+						Đăng xuất
 					</Typography>
 				</ListItem>
 			</List>

@@ -4,6 +4,7 @@ import {
 	PencilIcon,
 	UserPlusIcon,
 } from '@heroicons/react/24/solid';
+
 import {
 	Card,
 	CardHeader,
@@ -68,20 +69,13 @@ export function MembersTable() {
 	}, [filter, tasks]);
 	return (
 		<Card className='w-full'>
-			<CardHeader
-				floated={false}
-				shadow={false}
-				className='rounded-none'>
+			<CardHeader floated={false} shadow={false} className='rounded-none'>
 				<div className='mb-8 flex items-center justify-between gap-8'>
 					<div>
-						<Typography
-							variant='h5'
-							color='blue-gray'>
+						<Typography variant='h5' color='blue-gray'>
 							Danh sách việc làm
 						</Typography>
-						<Typography
-							color='gray'
-							className='mt-1 font-normal'>
+						<Typography color='gray' className='mt-1 font-normal'>
 							Danh sách chi tiết về công việc bạn cần hoàn thành
 						</Typography>
 					</div>
@@ -90,23 +84,16 @@ export function MembersTable() {
 							className='flex items-center gap-3'
 							size='sm'
 							variant='gradient'
-							onClick={handleDialogOpen}>
-							<UserPlusIcon
-								strokeWidth={2}
-								className='h-4 w-4'
-							/>
+							onClick={handleDialogOpen}
+						>
+							<UserPlusIcon strokeWidth={2} className='h-4 w-4' />
 							Thêm công việc
 						</Button>
-						<DialogWithForm
-							open={isDialogOpen}
-							handleOpen={handleDialogOpen}
-						/>
+						<DialogWithForm open={isDialogOpen} handleOpen={handleDialogOpen} />
 					</div>
 				</div>
 				<div className='flex flex-col items-center justify-between gap-8 md:flex-row'>
-					<Tabs
-						value={filter}
-						className='w-full'>
+					<Tabs value={filter} className='w-full'>
 						<TabsHeader>
 							{TABS.map(({ label, value }) => (
 								<Tab
@@ -118,14 +105,12 @@ export function MembersTable() {
 											setFilteredTasks(tasks);
 										} else {
 											setFilteredTasks(
-												tasks.filter(
-													(task) =>
-														task.status === value
-												)
+												tasks.filter((task) => task.status === value)
 											);
 										}
 									}}
-									className='w-50'>
+									className='w-50'
+								>
 									&nbsp;&nbsp;{label}&nbsp;&nbsp;
 								</Tab>
 							))}
@@ -144,13 +129,8 @@ export function MembersTable() {
 					<thead>
 						<tr>
 							{TABLE_HEAD.map((head) => (
-								<th
-									key={head}
-									className=' border-blue-gray-100 bg-blue-gray-50/50 p-4'>
-									<Typography
-										variant='small'
-										color='blue-gray'
-										className='font-normal leading-none opacity-70'>
+								<th key={head} className=' border-blue-gray-100 bg-blue-gray-50/50 p-4'>
+									<Typography variant='small' color='blue-gray' className='font-normal leading-none opacity-70'>
 										{head}
 									</Typography>
 								</th>
@@ -162,22 +142,12 @@ export function MembersTable() {
 							<tr key={task.id}>
 								<td className='p-4'>
 									<div className='flex items-center gap-3'>
-										<Avatar
-											src={task.iconUrl}
-											color='blue'
-											size='sm'
-										/>
+										<Avatar src={task.iconUrl} color='blue' size='sm' />
 										<div className='flex flex-col'>
-											<Typography
-												variant='small'
-												color='blue-gray'
-												className='font-normal'>
+											<Typography variant='small' color='blue-gray' className='font-normal'>
 												{task.title}
 											</Typography>
-											<Typography
-												variant='small'
-												color='blue-gray'
-												className='font-normal opacity-70'>
+											<Typography variant='small' color='blue-gray' className='font-normal opacity-70'>
 												{task.description}
 											</Typography>
 										</div>
@@ -185,13 +155,8 @@ export function MembersTable() {
 								</td>
 								<td className='p-4'>
 									<div className='flex flex-col'>
-										<Typography
-											variant='small'
-											color='blue-gray'
-											className='font-normal'>
-											{task.type === 'normal'
-												? 'Bình thường'
-												: 'Quan trọng'}
+										<Typography variant='small' color='blue-gray' className='font-normal'>
+											{task.type === 'normal' ? 'Bình thường' : 'Quan trọng'}
 										</Typography>
 									</div>
 								</td>
@@ -200,36 +165,21 @@ export function MembersTable() {
 										<Chip
 											variant='ghost'
 											size='sm'
-											value={
-												task.status === 'active'
-													? 'Chưa hoàn thành'
-													: 'Hoàn Thành'
-											}
-											color={
-												task.status === 'active'
-													? 'red'
-													: 'green'
-											}
+											value={task.status === 'active' ? 'Chưa hoàn thành' : 'Hoàn Thành'}
+											color={task.status === 'active' ? 'red' : 'green'}
 										/>
 									</div>
 								</td>
 								<td className='p-4'>
-									<Typography
-										variant='body'
-										color='blue-gray'>
-										{task.deadline}
+									<Typography variant='body' color='blue-gray'>
+										{new Date(task.deadline).toLocaleDateString()}
 									</Typography>
 								</td>
-
 								<td className='p-4'>
 									<div className='flex items-center gap-4'>
-										<Tooltip
-											content='Chỉnh sửa'
-											position='top'>
-											<IconButton
-												color='light-blue'
-												size='sm'>
-												<PencilIcon className='h-5 w-5' />
+										<Tooltip content="Chỉnh Sửa">
+											<IconButton variant="text">
+												<PencilIcon className="h-4 w-4" />
 											</IconButton>
 										</Tooltip>
 									</div>

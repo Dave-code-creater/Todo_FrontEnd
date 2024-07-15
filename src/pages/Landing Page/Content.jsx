@@ -37,11 +37,10 @@ export default function LandingPage() {
                     <div className="lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:mx-auto lg:grid lg:w-full lg:max-w-7xl lg:grid-cols-2 lg:gap-x-8 lg:px-8">
                         <div className="lg:pr-4">
                             <div className="lg:max-w-lg">
-                                <p className="text-base font-semibold leading-7 text-indigo-600">Deploy faster</p>
-                                <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">A better workflow</h1>
+                                <p className="text-base font-semibold leading-7 text-indigo-600">Nâng cao hiệu quả</p>
+                                <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Todo List</h1>
                                 <p className="mt-6 text-xl leading-8 text-gray-700">
-                                    Aliquet nec orci mattis amet quisque ullamcorper neque, nibh sem. At arcu, sit dui mi, nibh dui, diam
-                                    eget aliquam. Quisque id at vitae feugiat egestas.
+                                    Một ứng dụng quản lý công việc đơn giản giúp bạn dễ dàng quản lý công việc hàng ngày của mình.
                                 </p>
                             </div>
                         </div>
@@ -57,46 +56,35 @@ export default function LandingPage() {
                         <div className="lg:pr-4">
                             <div className="max-w-xl text-base leading-7 text-gray-700 lg:max-w-lg">
                                 <p>
-                                    Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim. Mattis mauris semper sed amet
-                                    vitae sed turpis id. Id dolor praesent donec est. Odio penatibus risus viverra tellus varius sit neque
-                                    erat velit. Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim. Mattis mauris
-                                    semper sed amet vitae sed turpis id.
+                                    Xây dựng Todo List của riêng bạn với các tính năng đặc biệt giúp bạn dễ dàng quản lý công việc hàng ngày. Cho phép chia sẻ công việc với bạn bè, gia đình, đồng nghiệp.
+                                    Với sức mạnh của AI, Todo List sẽ gợi ý cho bạn các công việc cần hoàn thành trong ngày dựa trên tình hình công việc của bạn cũng như lên kế hoạch.
                                 </p>
                                 <ul role="list" className="mt-8 space-y-8 text-gray-600">
                                     <li className="flex gap-x-3">
                                         <CloudArrowUpIcon className="mt-1 h-5 w-5 flex-none text-indigo-600" aria-hidden="true" />
                                         <span>
-                                            <strong className="font-semibold text-gray-900">Push to deploy.</strong> Lorem ipsum, dolor sit amet
-                                            consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate
-                                            blanditiis ratione.
+                                            <strong className="font-semibold text-gray-900">Dễ sử dụng.</strong> Todo List cho phép bạn dễ dàng thêm công việc, sửa công việc, xóa công việc.
                                         </span>
                                     </li>
                                     <li className="flex gap-x-3">
                                         <LockClosedIcon className="mt-1 h-5 w-5 flex-none text-indigo-600" aria-hidden="true" />
                                         <span>
-                                            <strong className="font-semibold text-gray-900">SSL certificates.</strong> Anim aute id magna aliqua
-                                            ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.
+                                            <strong className="font-semibold text-gray-900">Bảo mật.</strong> Todo List giúp bạn bảo mật thông tin công việc của mình.
                                         </span>
                                     </li>
                                     <li className="flex gap-x-3">
                                         <ServerIcon className="mt-1 h-5 w-5 flex-none text-indigo-600" aria-hidden="true" />
                                         <span>
-                                            <strong className="font-semibold text-gray-900">Database backups.</strong> Ac tincidunt sapien
-                                            vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.
+                                            <strong className="font-semibold text-gray-900">An Toàn.</strong>  Được lưu trữ trên máy chủ an toàn, không lo mất dữ liệu.
                                         </span>
                                     </li>
                                 </ul>
                                 <p className="mt-8">
-                                    Et vitae blandit facilisi magna lacus commodo. Vitae sapien duis odio id et. Id blandit molestie auctor
-                                    fermentum dignissim. Lacus diam tincidunt ac cursus in vel. Mauris varius vulputate et ultrices hac
-                                    adipiscing egestas. Iaculis convallis ac tempor et ut. Ac lorem vel integer orci.
+                                    Xây dựng bởi Tấn Đạt, một lập trình viên trẻ, nhiệt huyết với ước mơ xây dựng một ứng dụng giúp mọi người dễ dàng quản lý công việc hàng ngày.
                                 </p>
-                                <h2 className="mt-16 text-2xl font-bold tracking-tight text-gray-900">No server? No problem.</h2>
+                                <h2 className="mt-16 text-2xl font-bold tracking-tight text-gray-900">Chi phí? Hoàn toàn miễn phí.</h2>
                                 <p className="mt-6">
-                                    Id orci tellus laoreet id ac. Dolor, aenean leo, ac etiam consequat in. Convallis arcu ipsum urna nibh.
-                                    Pharetra, euismod vitae interdum mauris enim, consequat vulputate nibh. Maecenas pellentesque id sed
-                                    tellus mauris, ultrices mauris. Tincidunt enim cursus ridiculus mi. Pellentesque nam sed nullam sed diam
-                                    turpis ipsum eu a sed convallis diam.
+                                    Mong mọi người có một trải nghiệm tuyệt vời khi sử dụng
                                 </p>
                             </div>
                         </div>

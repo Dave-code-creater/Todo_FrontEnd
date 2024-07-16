@@ -9,17 +9,14 @@ const routes = [
 	{
 		path: '/',
 		element: <LandingPage />,
-		exact: true,
 	},
 	{
 		path: '/login',
 		element: <Login />,
-		exact: true,
 	},
 	{
 		path: '/signup',
 		element: <SignUp />,
-		exact: true,
 	},
 	{
 		path: '/dashboard',
@@ -28,7 +25,6 @@ const routes = [
 				<MainPage />
 			</PrivateRoute>
 		),
-		exact: true,
 	},
 ];
 

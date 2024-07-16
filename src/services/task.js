@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-	baseURL: 'http://192.168.2.137:3003',
+	origin: 'http://www.danhsachcongviec.site',
 	'Access-Control-Allow-Credentials': true,
 });
 

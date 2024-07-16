@@ -39,7 +39,7 @@ export function NavbarDefault() {
 				<a
 					href='/'
 					className='flex  text-black items-center'>
-					Pages
+					Trang Chủ
 				</a>
 			</Typography>
 			<Typography
@@ -63,7 +63,7 @@ export function NavbarDefault() {
 				<a
 					href='#'
 					className='flex text-black items-center'>
-					Account
+					Tài Khoản
 				</a>
 			</Typography>
 			<Typography
@@ -109,7 +109,7 @@ export function NavbarDefault() {
 				<a
 					href='#'
 					className='flex text-black items-center'>
-					Docs
+					Tài liệu
 				</a>
 			</Typography>
 		</ul>

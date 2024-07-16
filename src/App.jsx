@@ -11,7 +11,6 @@ function App() {
 						key={index}
 						path={route.path}
 						element={route.element}
-						exact={route.exact}
 					/>
 				))}
 			</Routes>

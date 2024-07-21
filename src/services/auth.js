@@ -1,21 +1,23 @@
 import axios from 'axios';
 
 const API = axios.create({
-	origin: 'http://www.danhsachcongviec.site',
-	'Access-Control-Allow-Credentials': true,
+	origin: 'https://server-s43nb4qicq-as.a.run.app/api',
+	"Access-Control-Allow-Credentials": true,
+	withCredentials: true
+
 });
 
 export const signin = async ({ email, password }) =>
-	API.post('/auth/login', {
+	API.post('/login', {
 		email,
 		password,
 	});
 
 export const signup = async ({ username, email, password }) =>
-	API.post('/auth/register', {
+	API.post('/register', {
 		username,
 		email,
 		password,
 	});
 
-export const signout = async () => API.post('/auth/logout');
+export const signout = async () => API.post('/logout');

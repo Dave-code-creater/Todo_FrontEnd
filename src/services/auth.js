@@ -1,10 +1,9 @@
 import axios from 'axios';
 
 const API = axios.create({
-	origin: 'https://server-s43nb4qicq-as.a.run.app/api/auth',
+	baseURL: 'https://server-s43nb4qicq-as.a.run.app/api/auth',
 	"Access-Control-Allow-Credentials": true,
 	withCredentials: true
-
 });
 
 export const signin = async ({ email, password }) =>

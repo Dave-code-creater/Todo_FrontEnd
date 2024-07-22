@@ -1,13 +1,15 @@
 import axios from 'axios';
 
 const API = axios.create({
-	baseURL: 'https://server-20782jd27-dave-code-creaters-projects.vercel.app/api/auth',
+	baseURL: 'https://server-mu-beige.vercel.app/api/auth',
 	"Access-Control-Allow-Credentials": true,
 	withCredentials: true,
 	headers: {
 		'Content-Type': 'application/json',
 		'Accept': 'application/json',
 	},
+
+	
 	
 
 });

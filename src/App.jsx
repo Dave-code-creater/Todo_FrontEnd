@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import routes from './constants/route';
 
 function App() {
+	console.log(routes); // Add this line to debug
 	return (
 		<div className='App'>
 			<Routes>

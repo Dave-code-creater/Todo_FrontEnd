@@ -115,77 +115,7 @@ export function MembersTable() {
                     </div>
                 </div>
             </CardHeader>
-            <CardBody className='overflow-scroll px-0'>
-                {filteredTasks.length === 0 ? (
-                    <Typography color='gray' className='text-center'>
-                        Không có công việc nào để hiển thị
-                    </Typography>
-                ) : (
-                    <table className='mt-4 w-full min-w-max table-auto text-left overflow-y-scroll'>
-                        <thead>
-                            <tr>
-                                {TABLE_HEAD.map((head) => (
-                                    <th key={head} className=' border-blue-gray-100 bg-blue-gray-50/50 p-4'>
-                                        <Typography variant='small' color='blue-gray' className='font-normal leading-none opacity-70'>
-                                            {head}
-                                        </Typography>
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredTasks.map((task) => (
-                                <tr key={task.id}>
-                                    <td className='p-4'>
-                                        <div className='flex items-center gap-3'>
-                                            <Avatar src={task.iconUrl} color='blue' size='sm' />
-                                            <div className='flex flex-col'>
-                                                <Typography variant='small' color='blue-gray' className='font-normal'>
-                                                    {task.title}
-                                                </Typography>
-                                                <Typography variant='small' color='blue-gray' className='font-normal opacity-70'>
-                                                    {task.description}
-                                                </Typography>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className='p-4'>
-                                        <div className='flex flex-col'>
-                                            <Typography variant='small' color='blue-gray' className='font-normal'>
-                                                {task.type === 'normal' ? 'Bình thường' : 'Quan trọng'}
-                                            </Typography>
-                                        </div>
-                                    </td>
-                                    <td className='p-4'>
-                                        <div className='w-max'>
-                                            <Chip
-                                                variant='ghost'
-                                                size='sm'
-                                                value={task.status === 'in-progress' ? 'Chưa hoàn thành' : 'Hoàn Thành'}
-                                                color={task.status === 'in-progress' ? 'red' : 'green'}
-                                            />
-                                        </div>
-                                    </td>
-                                    <td className='p-4'>
-                                        <Typography variant='body' color='blue-gray'>
-                                            {new Date(task.deadline).toLocaleDateString()}
-                                        </Typography>
-                                    </td>
-                                    <td className='p-4'>
-                                        <div className='flex items-center gap-4'>
-                                            <Tooltip content="Chỉnh Sửa">
-                                                <IconButton variant="text">
-                                                    <PencilIcon className="h-4 w-4" />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                )}
-            </CardBody>
+            
         </Card>
     );
 }

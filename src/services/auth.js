@@ -8,7 +8,6 @@ const API = axios.create({
 		'Content-Type': 'application/json',
 		'Accept': 'application/json',
 	},
-
 });
 
 export const signin = async ({ email, password }) =>

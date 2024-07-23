@@ -19,7 +19,7 @@ export function DialogWithForm({ open, handleOpen }) {
 	const dispatch = useDispatch();
 	const [title, setTitle] = useState('');
 	const [description, setDescription] = useState('');
-	const [status, setStatus] = useState('active');
+	const [status, setStatus] = useState('in-progress');
 	const [type, setType] = useState('normal');
 	const [deadline, setDeadline] = useState(new Date());
 	const id = jwtDecode(localStorage.getItem('refreshToken')).userId;
@@ -44,7 +44,7 @@ export function DialogWithForm({ open, handleOpen }) {
 
 		setTitle('');
 		setDescription('');
-		setStatus('active');
+		setStatus('in-progress');
 		setType('normal');
 		setDeadline(new Date());
 	};
@@ -132,10 +132,10 @@ export function DialogWithForm({ open, handleOpen }) {
 											setStatus(e.target.value)
 										}
 										className='input pe-12 flex justify-start '>
-										<option value='inactive'>
-											Hoàng thành
+										<option value='completed'>
+											Hoàn thành
 										</option>
-										<option value='active'>
+										<option value='in-progress'>
 											Chưa hoàn thành
 										</option>
 									</select>

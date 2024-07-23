@@ -37,7 +37,7 @@ export const addTask = async ({
 	type,
 	deadline,
 }) =>
-	console.log(localStorage.getItem('accessToken'))
+	
 	API.post(
 		`/task/${userId}/`, // Verify this endpoint in your API
 		{

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-	baseURL: 'https://server-s43nb4qicq-as.a.run.app/api', // Use baseURL instead of origin
+	baseURL: 'https://server-mu-beige.vercel.app/api', // Use baseURL instead of origin
 	withCredentials: true,
 	headers: {
 		'Content-Type': 'application/json',

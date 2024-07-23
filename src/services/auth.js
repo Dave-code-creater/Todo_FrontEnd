@@ -9,9 +9,6 @@ const API = axios.create({
 		'Accept': 'application/json',
 	},
 
-	
-	
-
 });
 
 export const signin = async ({ email, password }) =>

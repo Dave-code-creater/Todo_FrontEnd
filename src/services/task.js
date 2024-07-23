@@ -1,8 +1,13 @@
 import axios from 'axios';
 
 const API = axios.create({
-	origin: 'https://server-s43nb4qicq-as.a.run.app/api/task',
-	'Access-Control-Allow-Credentials': true,
+	baseURL: 'https://server-s43nb4qicq-as.a.run.app/api', // Use baseURL instead of origin
+	withCredentials: true,
+	headers: {
+		'Content-Type': 'application/json',
+		'Authorization': `Bearer ${localStorage.getItem('refreshToken')}`,
+		Accept: 'application/json',
+	},
 });
 
 export const getTasks = async (id) =>
@@ -21,7 +26,7 @@ export const addTask = async ({
 	deadline,
 }) =>
 	API.post(
-		`/task/${userId}/`,
+		`/task/${userId}/`, // Verify this endpoint in your API
 		{
 			title,
 			description,
@@ -38,7 +43,7 @@ export const addTask = async ({
 	);
 
 export const deleteTask = async (id) =>
-	API.delete(`/tasks/${id}`, {
+	API.delete(`/task/${id}`, { // Adjust endpoint if needed
 		headers: {
 			Authorization: `Bearer ${localStorage.getItem('refreshToken')}`,
 		},
@@ -53,7 +58,7 @@ export const updateTask = async ({
 	type,
 }) =>
 	API.put(
-		`/tasks/${id}`,
+		`/task/${id}`, // Adjust endpoint if needed
 		{
 			title,
 			description,

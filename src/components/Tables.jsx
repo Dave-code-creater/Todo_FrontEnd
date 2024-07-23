@@ -115,76 +115,76 @@ export function MembersTable() {
                     </div>
                 </div>
             </CardHeader>
-            
-			<CardBody>
-				<table className='w-full'>
-					<thead>
-						<tr>
-							{TABLE_HEAD.map((head, index) => (
-								<th key={index} className='py-3'>
-									{head}
-								</th>
-							))}
-						</tr>
-					</thead>
-					<tbody>
-						{filteredTasks.map((task, index) => (
-							<tr key={index}>
-								<td>
-									<div className='flex items-center gap-4'>
-										<Avatar
-											src={task.avatar}
-											alt={task.title}
-											size='sm'
-										/>
-										<div>
-											<Typography variant='h6'>
-												{task.title}
-											</Typography>
-											<Typography color='gray'>
-												{task.description}
-											</Typography>
-										</div>
-									</div>
-								</td>
-								<td>
-									<Chip
-										color={task.status === 'active' ? 'red' : 'green'}
-									>
-										{task.status === 'active' ? 'Cao' : 'Thấp'}
-									</Chip>
-								</td>
-								<td>
-									<Chip
-										color={task.status === 'active' ? 'red' : 'green'}
-									>
-										{task.status === 'active' ? 'Chưa hoàn thành' : 'Hoàn thành'}
-									</Chip>
-								</td>
-								<td>
-									<Typography variant='button'>
-										{task.deadline}
-									</Typography>
-								</td>
-								<td>
-									<div className='flex items-center gap-4'>
-										<Tooltip content='Edit'>
-											<IconButton>
-												<PencilIcon className='h-5 w-5' />
-											</IconButton>
-										</Tooltip>
-										<Tooltip content='Delete'>
-											<IconButton>
-												<PencilIcon className='h-5 w-5' />
-											</IconButton>
-										</Tooltip>
-									</div>
-								</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
-			</CardBody>
+
+            <CardBody>
+                <table className='w-full'>
+                    <thead>
+                        <tr>
+                            {TABLE_HEAD.map((head, index) => (
+                                <th key={index} className='py-3'>
+                                    {head}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredTasks.map((task, index) => (
+                            <tr key={index}>
+                                <td>
+                                    <div className='flex items-center gap-3'>
+                                        <Avatar
+                                            src={task.iconUrl}
+                                            alt={task.title}
+                                            size='sm'
+                                        />
+                                        <div>
+                                            <Typography variant='sm' color='blue-gray' className='font-normal'>
+                                                {task.title}
+                                            </Typography>
+                                            <Typography color='blue-gray' variant='small' className='font-normal opacity-70'>
+                                                {task.description}
+                                            </Typography>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <Chip
+                                        variant='ghost'
+                                        size='sm'
+                                        color={task.status === 'in-progress' ? 'red' : 'green'}
+                                    >
+                                        {task.status === 'in-progress' ? 'Cao' : 'Thấp'}
+                                    </Chip>
+                                </td>
+                                <td>
+                                    <Chip
+                                        variant='filled'
+                                        size='sm'
+                                        color={task.status === 'active' ? 'red' : 'green'}
+                                    >
+                                        {task.status === 'active' ? 'Chưa hoàn thành' : 'Hoàn thành'}
+                                    </Chip>
+                                </td>
+                                <td>
+                                    <Typography variant='small' color='blue-gray' className='font-normal'>
+                                        {task.deadline}
+                                    </Typography>
+                                </td>
+                                <td>
+                                    <div className='flex items-center gap-4'>
+                                        <Tooltip content='Cập nhật'>
+                                            <IconButton>
+                                                <PencilIcon className='h-5 w-5' />
+                                            </IconButton>
+                                        </Tooltip>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </CardBody>
         </Card>
     );
 }

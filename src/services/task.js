@@ -5,7 +5,7 @@ const API = axios.create({
 	withCredentials: true,
 	headers: {
 		'Content-Type': 'application/json',
-		'Authorization': `Bearer ${localStorage.getItem('refreshToken')}`,
+		'Authorization': `Bearer ${localStorage.getItem('accessToken')}`,
 		Accept: 'application/json',
 	},
 });
@@ -13,7 +13,7 @@ const API = axios.create({
 export const getTasks = async (id) =>
 	API.get(`/task/${id}`, {
 		headers: {
-			Authorization: `Bearer ${localStorage.getItem('refreshToken')}`,
+			Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
 		},
 	});
 
@@ -37,7 +37,7 @@ export const addTask = async ({
 		},
 		{
 			headers: {
-				Authorization: `Bearer ${localStorage.getItem('refreshToken')}`,
+				Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
 			},
 		}
 	);
@@ -45,7 +45,7 @@ export const addTask = async ({
 export const deleteTask = async (id) =>
 	API.delete(`/task/${id}`, { // Adjust endpoint if needed
 		headers: {
-			Authorization: `Bearer ${localStorage.getItem('refreshToken')}`,
+			Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
 		},
 	});
 
@@ -68,7 +68,7 @@ export const updateTask = async ({
 		},
 		{
 			headers: {
-				Authorization: `Bearer ${localStorage.getItem('refreshToken')}`,
+				Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
 			},
 		}
 	);

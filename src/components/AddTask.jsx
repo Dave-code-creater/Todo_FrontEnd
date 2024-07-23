@@ -36,6 +36,8 @@ export function DialogWithForm({ open, handleOpen }) {
 			})
 		);
 
+		console.log(title, description, status, type, deadline, id);
+
 		if (response) {
 			handleOpen();
 		}

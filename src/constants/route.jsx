@@ -4,7 +4,7 @@ import Login from '../pages/Login/Login';
 import SignUp from '../pages/Sign Up/SignUp';
 import MainPage from '../pages/Dashboard/MainPage';
 import PrivateRoute from '../route/PrivateRoute';
-
+import Profile from '../pages/Profile/Profile';
 const routes = [
 	{
 		path: '/',
@@ -26,6 +26,14 @@ const routes = [
 			</PrivateRoute>
 		),
 	},
+	{
+		path: '/profile',
+		element: (
+			<PrivateRoute>
+				<Profile />
+			</PrivateRoute>
+		),
+	}
 ];
 
 export default routes;

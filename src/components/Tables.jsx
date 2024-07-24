@@ -4,6 +4,7 @@ import {
     PencilIcon,
     UserPlusIcon,
 } from '@heroicons/react/24/solid';
+import { format } from 'date-fns';
 import {
     Card,
     CardHeader,
@@ -51,14 +52,16 @@ export function MembersTable() {
         if (filter === 'all') {
             filtered = tasks;
         } else if (filter === 'uncompleted') {
-            filtered = tasks.filter((task) => task.status === 'active');
+            filtered = tasks.filter((task) => task.status === 'in-progress');
         } else {
-            filtered = tasks.filter((task) => task.status === 'inactive');
+            filtered = tasks.filter((task) => task.status === 'completed');
         }
 
         // Only update state if filteredTasks has changed
         setFilteredTasks((prevFilteredTasks) => {
-            if (JSON.stringify(prevFilteredTasks) !== JSON.stringify(filtered)) {
+            if (
+                JSON.stringify(prevFilteredTasks) !== JSON.stringify(filtered)
+            ) {
                 return filtered;
             }
             return prevFilteredTasks;
@@ -99,9 +102,18 @@ export function MembersTable() {
                                     value={value}
                                     onClick={() => {
                                         setFilter(value);
+                                        if (value === 'all') {
+                                            setFilteredTasks(tasks);
+                                        } else {
+                                            setFilteredTasks(
+                                                tasks.filter(
+                                                    (task) =>
+                                                        task.status === value
+                                                )
+                                            );
+                                        }
                                     }}
-                                    className='w-50'
-                                >
+                                    className='w-50'>
                                     &nbsp;&nbsp;{label}&nbsp;&nbsp;
                                 </Tab>
                             ))}
@@ -116,72 +128,87 @@ export function MembersTable() {
                 </div>
             </CardHeader>
 
-            <CardBody>
-                <table className='w-full'>
+            <CardBody className='overflow-scroll px-0'>
+                <table className='mt-4 w-full min-w-max table-auto text-left overflow-y-scroll'>
                     <thead>
                         <tr>
                             {TABLE_HEAD.map((head, index) => (
-                                <th key={index} className='py-3'>
-                                    {head}
+                                <th key={index} className=' border-blue-gray-100 bg-blue-gray-50/50 p-4'>
+                                    <Typography
+                                        variant='small'
+                                        color='blue-gray'
+                                        className='font-normal leading-none opacity-70'>
+                                        {head}
+                                    </Typography>
                                 </th>
                             ))}
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredTasks.map((task, index) => (
-                            <tr key={index}>
-                                <td>
-                                    <div className='flex items-center gap-3'>
-                                        <Avatar
-                                            src={task.iconUrl}
-                                            alt={task.title}
-                                            size='sm'
-                                        />
-                                        <div>
-                                            <Typography variant='sm' color='blue-gray' className='font-normal'>
-                                                {task.title}
-                                            </Typography>
-                                            <Typography color='blue-gray' variant='small' className='font-normal opacity-70'>
-                                                {task.description}
+                        {filteredTasks.map((task, index) => {
+                            // Format the deadline
+                            const formattedDeadline = format(new Date(task.deadline), 'dd-MM-yyyy');
+
+                            return (
+                                <tr key={index}>
+                                    <td className='p-4'>
+                                        <div className='flex items-center gap-3'>
+                                            <Avatar
+                                                src={task.iconUrl}
+                                                alt={task.title}
+                                                size='sm'
+                                            />
+                                            <div>
+                                                <Typography variant='sm' color='blue-gray' className='font-normal'>
+                                                    {task.title}
+                                                </Typography>
+                                                <Typography color='blue-gray' variant='small' className='font-normal opacity-70'>
+                                                    {task.description}
+                                                </Typography>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className='p-4'>
+                                        <div className='w-max'>
+                                            <Typography
+                                                variant='small'
+                                                color='blue-gray'
+                                                className='font-normal'>
+                                                {task.type === 'normal'
+                                                    ? 'Bình thường'
+                                                    : 'Quan trọng'}
                                             </Typography>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <Chip
-                                        variant='ghost'
-                                        size='sm'
-                                        color={task.status === 'in-progress' ? 'red' : 'green'}
-                                    >
-                                        {task.status === 'in-progress' ? 'Cao' : 'Thấp'}
-                                    </Chip>
-                                </td>
-                                <td>
-                                    <Chip
-                                        variant='filled'
-                                        size='sm'
-                                        color={task.status === 'active' ? 'red' : 'green'}
-                                    >
-                                        {task.status === 'active' ? 'Chưa hoàn thành' : 'Hoàn thành'}
-                                    </Chip>
-                                </td>
-                                <td>
-                                    <Typography variant='small' color='blue-gray' className='font-normal'>
-                                        {task.deadline}
-                                    </Typography>
-                                </td>
-                                <td>
-                                    <div className='flex items-center gap-4'>
-                                        <Tooltip content='Cập nhật'>
-                                            <IconButton>
-                                                <PencilIcon className='h-5 w-5' />
-                                            </IconButton>
-                                        </Tooltip>
-
-                                    </div>
-                                </td>
-                            </tr>
-                        ))}
+                                    </td>
+                                    <td className='p-4'>
+                                        <div className='w-max'>
+                                            <Chip
+                                                variant='ghost'
+                                                size='sm'
+                                                value={task.status === 'completed' ? 'Hoàn thành' : 'Chưa hoàn thành'}
+                                                color={task.status === 'completed' ? 'green' : 'blue-gray'}
+                                            />
+                                        </div>
+                                    </td>
+                                    <td className='p-4'>
+                                        <Typography
+                                            variant='body'
+                                            color='blue-gray'>
+                                            {formattedDeadline}
+                                        </Typography>
+                                    </td>
+                                    <td className='p-4'>
+                                        <div className='flex items-center gap-4'>
+                                            <Tooltip content='Cập nhật'>
+                                                <IconButton>
+                                                    <PencilIcon className='h-5 w-5' />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </div>
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </table>
             </CardBody>

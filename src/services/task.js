@@ -4,23 +4,24 @@ const API = axios.create({
 	baseURL: 'https://server-mu-beige.vercel.app/api',
 	withCredentials: true,
 	headers: {
-	  'Content-Type': 'application/json',
-	  'Accept': 'application/json',
+		'Content-Type': 'application/json',
+		Accept: 'application/json',
 	},
-  });
-  
-  // Add the token to the header of each request dynamically
-  API.interceptors.request.use((config) => {
-	const token = localStorage.getItem('accessToken');
-	if (token) {
-	  config.headers['Authorization'] = `Bearer ${token}`;
+});
+
+// Add the token to the header of each request dynamically
+API.interceptors.request.use(
+	(config) => {
+		const token = localStorage.getItem('accessToken');
+		if (token) {
+			config.headers['Authorization'] = `Bearer ${token}`;
+		}
+		return config;
+	},
+	(error) => {
+		return Promise.reject(error);
 	}
-	return config;
-  }, (error) => {
-	return Promise.reject(error);
-  });
-
-
+);
 
 export const getTasks = async (id) =>
 	API.get(`/task/${id}`, {
@@ -37,7 +38,6 @@ export const addTask = async ({
 	type,
 	deadline,
 }) =>
-	
 	API.post(
 		`/task/${userId}/`, // Verify this endpoint in your API
 		{
@@ -56,7 +56,8 @@ export const addTask = async ({
 	);
 
 export const deleteTask = async (id) =>
-	API.delete(`/task/${id}`, { // Adjust endpoint if needed
+	API.delete(`/task/${id}`, {
+		// Adjust endpoint if needed
 		headers: {
 			Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
 		},

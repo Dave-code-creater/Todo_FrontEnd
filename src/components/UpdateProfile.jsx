@@ -16,6 +16,7 @@ import {
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 
+
 // @heroicons/react
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 
@@ -30,6 +31,10 @@ function Account1() {
     const [phoneNumber, setPhoneNumber] = React.useState();
     const [language, setLanguage] = React.useState();
     const [skills, setSkills] = React.useState();
+    const today = new Date();
+    const day = today.getDate();
+    const month = today.getMonth() + 1;
+    const year = today.getFullYear();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -61,13 +66,13 @@ function Account1() {
     return (
         <section className="px-8 py-20 container mx-auto">
             <Typography variant="h5" color="blue-gray">
-                Basic Information
+                Thông Tin Cơ Bản
             </Typography>
             <Typography
                 variant="small"
                 className="text-gray-600 font-normal mt-1"
             >
-                Update your profile information below.
+                Cập nhật thông tin hồ sơ của bạn bên dưới.
             </Typography>
             <div className="flex flex-col mt-8">
                 <form onSubmit={handleSubmit}>
@@ -78,11 +83,11 @@ function Account1() {
                                 color="blue-gray"
                                 className="mb-2 font-medium"
                             >
-                                First Name
+                                Tên
                             </Typography>
                             <Input
                                 size="lg"
-                                placeholder="Emma"
+                                placeholder="Linh"
                                 labelProps={{
                                     className: "hidden",
                                 }}
@@ -95,11 +100,11 @@ function Account1() {
                                 color="blue-gray"
                                 className="mb-2 font-medium"
                             >
-                                Last Name
+                                Họ
                             </Typography>
                             <Input
                                 size="lg"
-                                placeholder="Roberts"
+                                placeholder="Đỗ"
                                 labelProps={{
                                     className: "hidden",
                                 }}
@@ -114,17 +119,21 @@ function Account1() {
                                 color="blue-gray"
                                 className="mb-2 font-medium"
                             >
-                                I&apos;m
+                                Giới Tính
                             </Typography>
+                            <label className="hidden">Giới Tính</label>
                             <Select
-                                size="lg"
+                                size="small"
                                 labelProps={{
                                     className: "hidden",
                                 }}
+                                required=""
                                 className="border-t-blue-gray-200 aria-[expanded=true]:border-t-primary"
                             >
-                                <Option>Male</Option>
-                                <Option>Female</Option>
+                                <Option value="" disabled selected>Chọn Giới Tính</Option>
+                                <Option value="male">Nam</Option>
+                                <Option value="female">Nữ</Option>
+                                <Option value="other">Khác</Option>
                             </Select>
                         </div>
                         <div className="w-full">
@@ -133,14 +142,14 @@ function Account1() {
                                 color="blue-gray"
                                 className="mb-2 font-medium"
                             >
-                                Birth Date
+                                Ngày Sinh
                             </Typography>
                             <Popover placement="bottom">
                                 <PopoverHandler>
                                     <Input
                                         size="lg"
                                         onChange={() => null}
-                                        placeholder="Select a Date"
+                                        placeholder="Chọn Ngày"
                                         value={date ? format(date, "PPP") : ""}
                                         labelProps={{
                                             className: "hidden",
@@ -197,73 +206,6 @@ function Account1() {
                                 </PopoverContent>
                             </Popover>
                         </div>
-                        <div className="w-full">
-                            <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="mb-2 font-medium"
-                            >
-                                Day
-                            </Typography>
-                            <Select
-                                size="lg"
-                                labelProps={{
-                                    className: "hidden",
-                                }}
-                                className="border-t-blue-gray-200 aria-[expanded=true]:border-t-primary"
-                            >
-                                <Option>1</Option>
-                                <Option>2</Option>
-                                <Option>3</Option>
-                                <Option>4</Option>
-                                <Option>5</Option>
-                                <Option>6</Option>
-                                <Option>7</Option>
-                                <Option>8</Option>
-                                <Option>9</Option>
-                                <Option>10</Option>
-                                <Option>11</Option>
-                                <Option>12</Option>
-                                <Option>13</Option>
-                                <Option>14</Option>
-                                <Option>15</Option>
-                                <Option>16</Option>
-                                <Option>17</Option>
-                                <Option>18</Option>
-                                <Option>19</Option>
-                                <Option>20</Option>
-                                <Option>21</Option>
-                                <Option>22</Option>
-                                <Option>23</Option>
-                                <Option>24</Option>
-                                <Option>25</Option>
-                                <Option>26</Option>
-                                <Option>27</Option>
-                                <Option>28</Option>
-                                <Option>29</Option>
-                                <Option>30</Option>
-                            </Select>
-                        </div>
-                        <div className="w-full">
-                            <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="mb-2 font-medium"
-                            >
-                                Year
-                            </Typography>
-                            <Select
-                                size="lg"
-                                labelProps={{
-                                    className: "hidden",
-                                }}
-                                className="border-t-blue-gray-200 aria-[expanded=true]:border-t-primary"
-                            >
-                                <Option>2022</Option>
-                                <Option>2021</Option>
-                                <Option>2020</Option>
-                            </Select>
-                        </div>
                     </div>
                     <div className="mb-6 flex flex-col items-end gap-4 md:flex-row">
                         <div className="w-full">
@@ -276,7 +218,7 @@ function Account1() {
                             </Typography>
                             <Input
                                 size="lg"
-                                placeholder="emma@mail.com"
+                                placeholder="Linh@mail.com"
                                 labelProps={{
                                     className: "hidden",
                                 }}
@@ -289,11 +231,11 @@ function Account1() {
                                 color="blue-gray"
                                 className="mb-2 font-medium"
                             >
-                                Confirm Email
+                                Xác Nhận Email
                             </Typography>
                             <Input
                                 size="lg"
-                                placeholder="emma@mail.com"
+                                placeholder="Linh@mail.com"
                                 labelProps={{
                                     className: "hidden",
                                 }}
@@ -308,11 +250,11 @@ function Account1() {
                                 color="blue-gray"
                                 className="mb-2 font-medium"
                             >
-                                Location
+                                Địa Chỉ
                             </Typography>
                             <Input
                                 size="lg"
-                                placeholder="Florida, USA"
+                                placeholder="123 Thanh Xuân, Hà Nội"
                                 labelProps={{
                                     className: "hidden",
                                 }}
@@ -325,11 +267,11 @@ function Account1() {
                                 color="blue-gray"
                                 className="mb-2 font-medium"
                             >
-                                Phone Number
+                                Số Điện Thoại
                             </Typography>
                             <Input
                                 size="lg"
-                                placeholder="+123 0123 456 789"
+                                placeholder="0905 823 234"
                                 labelProps={{
                                     className: "hidden",
                                 }}
@@ -337,49 +279,14 @@ function Account1() {
                             />
                         </div>
                     </div>
-                    <div className="flex flex-col items-end gap-4 md:flex-row">
-                        <div className="w-full">
-                            <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="mb-2 font-medium"
-                            >
-                                Language
-                            </Typography>
-                            <Input
-                                size="lg"
-                                placeholder="Language"
-                                labelProps={{
-                                    className: "hidden",
-                                }}
-                                className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
-                            />
-                        </div>
-                        <div className="w-full">
-                            <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="mb-2 font-medium"
-                            >
-                                Skills
-                            </Typography>
-                            <Input
-                                size="lg"
-                                placeholder="Skills"
-                                labelProps={{
-                                    className: "hidden",
-                                }}
-                                className="w-full placeholder:opacity-100 focus:border-t-primary border-t-blue-gray-200"
-                            />
-                        </div>
-                    </div>
+
                 </form>
                 <div className="flex justify-end mt-8">
                     <Button
                         type="submit"
                         className="w-80 mt-8 stick bottom-0 right-0"
                     >
-                        Thay đổi thông tin
+                        Thay Đổi Thông Tin
                     </Button>
                 </div>
             </div>

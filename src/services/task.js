@@ -8,7 +8,6 @@ const API = axios.create({
 		Accept: 'application/json',
 	},
 });
-
 // Add the token to the header of each request dynamically
 API.interceptors.request.use(
 	(config) => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
     MagnifyingGlassIcon,
     PencilIcon,
@@ -12,61 +12,65 @@ import {
     Typography,
     Button,
     CardBody,
-    Chip,
     Tabs,
     TabsHeader,
     Tab,
     Avatar,
     IconButton,
     Tooltip,
+    Checkbox,
 } from '@material-tailwind/react';
-import useTasks from './TaskTable'; // Import the custom hook
 import { DialogWithForm } from './AddTask';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFilter, toggleTaskStatus } from '../redux/actions/TaskSlice';
+import { fetchTasks } from '../redux/actions/TaskSlice';
+import { tr } from 'date-fns/locale';
 
 const TABS = [
     { label: 'Tất cả', value: 'all' },
-    { label: 'Chưa hoàn thành', value: 'uncompleted' },
+    { label: 'Chưa hoàn thành', value: 'in-progress' },
     { label: 'Hoàn thành', value: 'completed' },
 ];
 
 const TABLE_HEAD = [
-    'Miêu tả chi tiết',
-    'Ưu Tiên',
-    'Hoàn Thành',
-    'Hạn Cuối',
-    'Thay Đổi',
+    'Miêu tả chi tiết',
+    'Ưu tiên',
+    'Hoàn thành',
+    'Hạn cuối',
+    'Thay đổi',
 ];
 
 export function MembersTable() {
-    const tasks = useTasks(); // Use the custom hook to get tasks
-    const [filter, setFilter] = useState('all');
-    const [filteredTasks, setFilteredTasks] = useState([]);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-
-    const handleDialogOpen = () => {
-        setIsDialogOpen((prev) => !prev);
-    };
+    const dispatch = useDispatch();
+    const tasks = useSelector((state) => state.taskAction.tasks);
+    const filter = useSelector((state) => state.taskAction.filter);
 
     useEffect(() => {
-        let filtered = [];
-        if (filter === 'all') {
-            filtered = tasks;
-        } else if (filter === 'uncompleted') {
-            filtered = tasks.filter((task) => task.status === 'in-progress');
-        } else {
-            filtered = tasks.filter((task) => task.status === 'completed');
-        }
+        dispatch(fetchTasks()); // Fetch tasks on component mount
+    }, [dispatch]);
 
-        // Only update state if filteredTasks has changed
-        setFilteredTasks((prevFilteredTasks) => {
-            if (
-                JSON.stringify(prevFilteredTasks) !== JSON.stringify(filtered)
-            ) {
-                return filtered;
-            }
-            return prevFilteredTasks;
-        });
+    const filteredTasks = useMemo(() => {
+        switch (filter) {
+            case 'in-progress':
+                return tasks.filter(task => task.status === 'in-progress');
+            case 'completed':
+                return tasks.filter(task => task.status === 'completed');
+            default:
+                return tasks;
+        }
     }, [filter, tasks]);
+
+    const handleToggleTaskStatus = (taskId, currentStatus) => {
+        const newStatus = currentStatus === 'completed' ? 'in-progress' : 'completed';
+        dispatch(toggleTaskStatus({ id: taskId, newStatus })); // Dispatch action to update task status in Redux store and DB
+        return <Checkbox checked={newStatus === 'completed'} />;
+    };
+
+    const [isDialogOpenAddTask, setIsDialogOpenAddTask] = useState(false);
+
+    const handleDialogOpen = () => {
+        setIsDialogOpenAddTask(prev => !prev);
+    };
 
     return (
         <Card className='w-full'>
@@ -74,7 +78,7 @@ export function MembersTable() {
                 <div className='mb-8 flex items-center justify-between gap-8'>
                     <div>
                         <Typography variant='h5' color='blue-gray'>
-                            Danh sách việc làm
+                            Danh sách việc làm
                         </Typography>
                         <Typography color='gray' className='mt-1 font-normal'>
                             Danh sách chi tiết về công việc bạn cần hoàn thành
@@ -90,7 +94,10 @@ export function MembersTable() {
                             <UserPlusIcon strokeWidth={2} className='h-4 w-4' />
                             Thêm công việc
                         </Button>
-                        <DialogWithForm open={isDialogOpen} handleOpen={handleDialogOpen} />
+                        <DialogWithForm
+                            open={isDialogOpenAddTask}
+                            handleOpen={handleDialogOpen}
+                        />
                     </div>
                 </div>
                 <div className='flex flex-col items-center justify-between gap-8 md:flex-row'>
@@ -100,20 +107,9 @@ export function MembersTable() {
                                 <Tab
                                     key={value}
                                     value={value}
-                                    onClick={() => {
-                                        setFilter(value);
-                                        if (value === 'all') {
-                                            setFilteredTasks(tasks);
-                                        } else {
-                                            setFilteredTasks(
-                                                tasks.filter(
-                                                    (task) =>
-                                                        task.status === value
-                                                )
-                                            );
-                                        }
-                                    }}
-                                    className='w-50'>
+                                    onClick={() => dispatch(setFilter(value))} // Update filter via dispatch
+                                    className='w-50'
+                                >
                                     &nbsp;&nbsp;{label}&nbsp;&nbsp;
                                 </Tab>
                             ))}
@@ -121,7 +117,7 @@ export function MembersTable() {
                     </Tabs>
                     <div className='w-full md:w-72'>
                         <Input
-                            label='Search'
+                            label='Tìm kiếm'
                             icon={<MagnifyingGlassIcon className='h-5 w-5' />}
                         />
                     </div>
@@ -133,11 +129,15 @@ export function MembersTable() {
                     <thead>
                         <tr>
                             {TABLE_HEAD.map((head, index) => (
-                                <th key={index} className=' border-blue-gray-100 bg-blue-gray-50/50 p-4'>
+                                <th
+                                    key={index}
+                                    className='border-blue-gray-100 bg-blue-gray-50/50 p-4'
+                                >
                                     <Typography
                                         variant='small'
                                         color='blue-gray'
-                                        className='font-normal leading-none opacity-70'>
+                                        className='font-normal leading-none opacity-70'
+                                    >
                                         {head}
                                     </Typography>
                                 </th>
@@ -145,70 +145,70 @@ export function MembersTable() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredTasks.map((task, index) => {
-                            // Format the deadline
-                            const formattedDeadline = format(new Date(task.deadline), 'dd-MM-yyyy');
-
-                            return (
-                                <tr key={index}>
-                                    <td className='p-4'>
-                                        <div className='flex items-center gap-3'>
-                                            <Avatar
-                                                src={task.iconUrl}
-                                                alt={task.title}
-                                                size='sm'
-                                            />
-                                            <div>
-                                                <Typography variant='sm' color='blue-gray' className='font-normal'>
-                                                    {task.title}
-                                                </Typography>
-                                                <Typography color='blue-gray' variant='small' className='font-normal opacity-70'>
-                                                    {task.description}
-                                                </Typography>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className='p-4'>
-                                        <div className='w-max'>
+                        {filteredTasks.map(({ id, iconUrl, title, description, priority, status, deadline }) => (
+                            <tr key={id}>
+                                <td className='p-4'>
+                                    <div className='flex items-center gap-3'>
+                                        <Avatar
+                                            src={iconUrl}
+                                            alt={title}
+                                            size='sm'
+                                        />
+                                        <div>
                                             <Typography
-                                                variant='small'
+                                                variant='sm'
                                                 color='blue-gray'
-                                                className='font-normal'>
-                                                {task.type === 'normal'
-                                                    ? 'Bình thường'
-                                                    : 'Quan trọng'}
+                                                className='font-normal'
+                                            >
+                                                {title}
+                                            </Typography>
+                                            <Typography
+                                                color='blue-gray'
+                                                variant='small'
+                                                className='font-normal opacity-70'
+                                            >
+                                                {description}
                                             </Typography>
                                         </div>
-                                    </td>
-                                    <td className='p-4'>
-                                        <div className='w-max'>
-                                            <Chip
-                                                variant='ghost'
-                                                size='sm'
-                                                value={task.status === 'completed' ? 'Hoàn thành' : 'Chưa hoàn thành'}
-                                                color={task.status === 'completed' ? 'green' : 'blue-gray'}
-                                            />
-                                        </div>
-                                    </td>
-                                    <td className='p-4'>
+                                    </div>
+                                </td>
+                                <td className="p-4">
+                                    <div className='w-max'>
                                         <Typography
-                                            variant='body'
-                                            color='blue-gray'>
-                                            {formattedDeadline}
+                                            variant='small'
+                                            color='blue-gray'
+                                            className='font-normal'
+                                        >
+                                            {status === 'normal'
+                                                ? 'Bình thường'
+                                                : 'Quan trọng'}
                                         </Typography>
-                                    </td>
-                                    <td className='p-4'>
-                                        <div className='flex items-center gap-4'>
-                                            <Tooltip content='Cập nhật'>
-                                                <IconButton>
-                                                    <PencilIcon className='h-5 w-5' />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </div>
-                                    </td>
-                                </tr>
-                            );
-                        })}
+                                    </div>
+                                </td>
+                                <td className="p-4">
+                                    <Tooltip content={status === 'completed' ? 'Đã hoàn thành' : 'Đánh dấu là hoàn thành'}>
+                                        <IconButton
+                                            variant="text"
+                                            onClick={() => handleToggleTaskStatus(id, status)}
+                                        >
+                                            <Checkbox checked={status === 'completed'} />
+                                        </IconButton>
+                                    </Tooltip>
+                                </td>
+                                <td className="p-4">
+                                    <Typography variant="small" color="blue-gray" className="font-normal">
+                                        {format(new Date(deadline), 'dd/MM/yyyy', { locale: tr })}
+                                    </Typography>
+                                </td>
+                                <td className="p-4">
+                                    <Tooltip content="Chỉnh sửa công việc">
+                                        <IconButton variant="text" color="blue-gray">
+                                            <PencilIcon className="h-4 w-4" />
+                                        </IconButton>
+                                    </Tooltip>
+                                </td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </CardBody>

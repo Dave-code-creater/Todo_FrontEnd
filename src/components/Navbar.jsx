@@ -83,9 +83,9 @@ export function NavbarDefault() {
 					/>
 				</svg>
 				<a
-					href='#'
+					href='/download'
 					className='flex text-black items-center'>
-					Blocks
+					Tải Xuống
 				</a>
 			</Typography>
 			<Typography
@@ -107,7 +107,7 @@ export function NavbarDefault() {
 					/>
 				</svg>
 				<a
-					href='#'
+					href='/faq'
 					className='flex text-black items-center'>
 					Tài liệu
 				</a>

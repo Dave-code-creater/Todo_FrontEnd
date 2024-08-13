@@ -1,42 +1,48 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../redux/actions/AuthSlice';
 import { NavbarDefault } from '../../components/Navbar';
 import { SimpleFooter } from '../../components/Footer';
 import { toast, ToastContainer } from 'react-toastify';
+import { useDispatch, useSelector } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function SimpleRegistrationForm() {
-	const { loading, error } = useSelector((state) => state.authLogin);
+
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
+	const { status, loading, error } = useSelector((state) => state.authLogin);
+
 	useEffect(() => {
-		if (loading === 200) {
-			navigate('/dashboard');
-		} else if (error) {
-			if (error.includes('409')) {
-				toast.error('Tài khoản đã tồn tại');
-			} else toast.error(`Registration failed: ${error}`);
+		if (error) {
+			toast.error(error);
 		}
-	}, [loading, error, navigate]);
+	}, [error]);
+
+
+
 
 	const handleSubmit = async (e) => {
-		e.preventDefault();
-		const response = await dispatch(login({ email, password }));
-		localStorage.setItem('accessToken', response.payload.accessToken);
-		localStorage.setItem('refreshToken', response.payload.refreshToken);
-
-		if (response.payload.refreshToken && response.payload.accessToken) {
-			navigate('/dashboard');
+		try {
+			e.preventDefault();
+			await dispatch(login({ email, password })).then((result) => {
+				if (status === 'succeeded') {
+					toast.success('Login successful');
+					setEmail('');
+					setPassword('');
+					navigate('/dashboard');
+				}
+			}
+			);
+		}
+		catch (error) {
+			console.log(error);
 		}
 
-		setEmail('');
-		setPassword('');
 	};
 
 	return (

@@ -1,9 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { getTasks, addTask, deleteTask, updateTask } from '../../services/task';
-
 // Action creators
 export const fetchTasks = createAsyncThunk('task/:id', async (id) => {
+	const state = getState();
+	const userId = state.authLogin.user.userID; // Adjust this path based on your auth state
 	const response = await getTasks(id);
+
 	return response.data;
 });
 
@@ -54,8 +56,20 @@ const taskSlice = createSlice({
 		tasks: [],
 		status: 'idle',
 		error: null,
+		filter: 'all',
 	},
-	reducers: {},
+	reducers: {
+		setFilter(state, action) {
+			state.filter = action.payload;
+		},
+		toggleTaskStatus(state, action) {
+			const { id, newStatus } = action.payload;
+			const task = state.tasks.find((task) => task.id === id);
+			if (task) {
+				task.status = newStatus;
+			}
+		},
+	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(fetchTasks.pending, (state) => {
@@ -125,5 +139,5 @@ const taskSlice = createSlice({
 			});
 	},
 });
-
+export const { setTasks, setFilter, toggleTaskStatus } = taskSlice.actions;
 export default taskSlice.reducer;

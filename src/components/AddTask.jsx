@@ -7,13 +7,12 @@ import {
 	CardFooter,
 	Typography,
 	Input,
-	Checkbox,
 } from '@material-tailwind/react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { addNewTask } from '../redux/actions/TaskSlice';
-import { jwtDecode } from 'jwt-decode';
-import { useDispatch } from 'react-redux';
+import '../assets/css/calendar.css';
+import { useDispatch, useSelector } from 'react-redux';
 
 export function DialogWithForm({ open, handleOpen }) {
 	const dispatch = useDispatch();
@@ -22,7 +21,8 @@ export function DialogWithForm({ open, handleOpen }) {
 	const [status, setStatus] = useState('in-progress');
 	const [type, setType] = useState('normal');
 	const [deadline, setDeadline] = useState(new Date());
-	const id = jwtDecode(localStorage.getItem('refreshToken')).userId;
+	const id = useSelector((state) => state.authLogin.user.userId);
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		const response = await dispatch(
@@ -35,8 +35,6 @@ export function DialogWithForm({ open, handleOpen }) {
 				userId: id,
 			})
 		);
-
-		console.log(title, description, status, type, deadline, id);
 
 		if (response) {
 			handleOpen();
@@ -55,7 +53,7 @@ export function DialogWithForm({ open, handleOpen }) {
 			open={open}
 			handler={handleOpen}
 			className='bg-transparent shadow-none'>
-			<Card className='mx-auto w-full max-w-[30rem]'>
+			<Card className='mx-auto w-full max-w-[32rem]'>
 				<CardBody className='flex flex-col gap-4  overflow-y-auto'>
 					<Typography
 						variant='h4'
@@ -66,7 +64,7 @@ export function DialogWithForm({ open, handleOpen }) {
 						className='mb-3 font-normal'
 						variant='paragraph'
 						color='gray'>
-						Hãy điền thông tin công việc của bạn vào form dưới đây
+						Hãy điền thông tin công việc của bạn vào biểu mẫu dưới đây
 					</Typography>
 					<form
 						className='space-y-4'
@@ -76,13 +74,13 @@ export function DialogWithForm({ open, handleOpen }) {
 							<label
 								htmlFor='title'
 								className='block text-sm font-medium leading-6 text-gray-900'>
-								Title
+								Tiêu đề
 							</label>
 							<div className='mt-2'>
 								<Input
 									type='text'
 									color='lightBlue'
-									placeholder='Title'
+									placeholder='Tiêu đề'
 									value={title}
 									onChange={(e) => setTitle(e.target.value)}
 								/>
@@ -90,13 +88,13 @@ export function DialogWithForm({ open, handleOpen }) {
 							<label
 								htmlFor='description'
 								className='block text-sm font-medium leading-6 text-gray-900'>
-								Description
+								Miêu tả
 							</label>
 							<div className='mt-2'>
 								<Input
 									type='text'
 									color='lightBlue'
-									placeholder='Description'
+									placeholder='Miêu tả'
 									value={description}
 									onChange={(e) =>
 										setDescription(e.target.value)
@@ -106,24 +104,22 @@ export function DialogWithForm({ open, handleOpen }) {
 							<label
 								htmlFor='deadline'
 								className='block text-sm font-medium leading-6 text-gray-900'>
-								Deadline
+								Hạn chót
 							</label>
-
-							<div className='mt-2 flex justify-center'>
+							<div className='mt-2 mb-4'>
 								<DatePicker
+									wrapperClassName='datePicker'
 									selected={deadline}
 									onChange={(date) => setDeadline(date)}
 									dateFormat='yyyy-MM-dd'
-									className='input'
-									PopupWidth='300px'
+									className='input w-full'
 								/>
 							</div>
-
 							<div className='flex flex-row gap-4'>
 								<label
 									htmlFor='status'
-									className='block text-sm font-medium leading-6 text-gray-900 w-11'>
-									Status
+									className='block text-sm font-medium leading-6 text-gray-900'>
+									Trạng thái
 								</label>
 								<div>
 									<select
@@ -131,7 +127,7 @@ export function DialogWithForm({ open, handleOpen }) {
 										onChange={(e) =>
 											setStatus(e.target.value)
 										}
-										className='input pe-12 flex justify-start '>
+										className='input pe-12 flex justify-start'>
 										<option value='completed'>
 											Hoàn thành
 										</option>
@@ -142,9 +138,9 @@ export function DialogWithForm({ open, handleOpen }) {
 								</div>
 
 								<label
-									htmlFor='type'
-									className='block text-sm font-medium leading-6 text-gray-900 w-11'>
-									Type
+									htmlFor='type '
+									className='block text-sm font-medium leading-6 text-gray-900'>
+									Loại
 								</label>
 
 								<div>
@@ -153,9 +149,9 @@ export function DialogWithForm({ open, handleOpen }) {
 										onChange={(e) =>
 											setType(e.target.value)
 										}
-										className='input pe-12 flex justify-start'>
+										className='input pe-12 flex justify-start text-center'>
 										<option value='emergency'>
-											Khẩn cấp
+											Khẩn cấp
 										</option>
 										<option value='normal'>
 											Bình thường

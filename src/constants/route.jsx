@@ -5,6 +5,8 @@ import SignUp from '../pages/Sign Up/SignUp';
 import MainPage from '../pages/Dashboard/MainPage';
 import PrivateRoute from '../route/PrivateRoute';
 import Profile from '../pages/Profile/Profile';
+import FAQ from "../pages/FAQ/FAQ";
+import Download from '../pages/Download Page/Download';
 const routes = [
 	{
 		path: '/',
@@ -17,6 +19,10 @@ const routes = [
 	{
 		path: '/signup',
 		element: <SignUp />,
+	},
+	{
+		path: '/faq',
+		element: <FAQ />,
 	},
 	{
 		path: '/dashboard',
@@ -33,6 +39,10 @@ const routes = [
 				<Profile />
 			</PrivateRoute>
 		),
+	},
+	{
+		path: '/download',
+		element: <Download />,
 	}
 ];
 

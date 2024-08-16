@@ -85,3 +85,16 @@ export const updateTask = async ({
 			},
 		}
 	);
+	export const updateTaskStatus = async ({ id, status }) =>
+		API.put(
+			`/${id}/status`, // Adjust endpoint if needed
+			{
+				status,
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+				},
+			}
+		);
+		

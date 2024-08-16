@@ -1,10 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getTasks, addTask, deleteTask, updateTask } from '../../services/task';
+import { getTasks, addTask, deleteTask, updateTask, updateTaskStatus } from '../../services/task';
 // Action creators
-export const fetchTasks = createAsyncThunk('task/:id', async (id) => {
-	const state = getState();
-	const userId = state.authLogin.user.userID; // Adjust this path based on your auth state
-	const response = await getTasks(id);
+export const fetchTasks = createAsyncThunk('task/:id', async (userId) => {
+	
+	const response = await getTasks(userId);
 
 	return response.data;
 });
@@ -20,7 +19,6 @@ export const addNewTask = createAsyncThunk(
 			deadline,
 			userId,
 		});
-		console.log('API call was made and it reached here.');
 		return response.data;
 	}
 );
@@ -33,18 +31,10 @@ export const removeTask = createAsyncThunk(
 	}
 );
 
-export const updateTaskStatus = createAsyncThunk(
-	'task/updateTaskStatus',
-	async ({ token, id, status }) => {
-		const response = await updateTask({ token, id, status });
-		return response.data;
-	}
-);
-
 export const updateTaskContent = createAsyncThunk(
 	'task/updateTaskContent',
-	async ({ token, id, content }) => {
-		const response = await updateTask({ token, id, content });
+	async ({ id, content }) => {
+		const response = await updateTask({ id, content });
 		return response.data;
 	}
 );
@@ -65,6 +55,7 @@ const taskSlice = createSlice({
 		toggleTaskStatus(state, action) {
 			const { id, newStatus } = action.payload;
 			const task = state.tasks.find((task) => task.id === id);
+			updateTaskStatus({ id, status: newStatus });
 			if (task) {
 				task.status = newStatus;
 			}
@@ -104,21 +95,6 @@ const taskSlice = createSlice({
 				);
 			})
 			.addCase(removeTask.rejected, (state, action) => {
-				state.status = 'failed';
-				state.error = action.error.message;
-			})
-			.addCase(updateTaskStatus.pending, (state) => {
-				state.status = 'loading';
-			})
-			.addCase(updateTaskStatus.fulfilled, (state, action) => {
-				state.status = 'succeeded';
-				state.tasks = state.tasks.map((task) =>
-					task.id === action.payload.id
-						? { ...task, status: action.payload.status }
-						: task
-				);
-			})
-			.addCase(updateTaskStatus.rejected, (state, action) => {
 				state.status = 'failed';
 				state.error = action.error.message;
 			})

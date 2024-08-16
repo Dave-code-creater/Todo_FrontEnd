@@ -44,10 +44,12 @@ export function MembersTable() {
     const dispatch = useDispatch();
     const tasks = useSelector((state) => state.taskAction.tasks);
     const filter = useSelector((state) => state.taskAction.filter);
+    const id = useSelector((state) => state.authLogin.user.userId);
+
 
     useEffect(() => {
-        dispatch(fetchTasks()); // Fetch tasks on component mount
-    }, [dispatch]);
+        dispatch(fetchTasks(id)); // Fetch tasks on component mount
+    }, [dispatch,tasks]);
 
     const filteredTasks = useMemo(() => {
         switch (filter) {
@@ -62,6 +64,7 @@ export function MembersTable() {
 
     const handleToggleTaskStatus = (taskId, currentStatus) => {
         const newStatus = currentStatus === 'completed' ? 'in-progress' : 'completed';
+
         dispatch(toggleTaskStatus({ id: taskId, newStatus })); // Dispatch action to update task status in Redux store and DB
         return <Checkbox checked={newStatus === 'completed'} />;
     };
@@ -124,8 +127,8 @@ export function MembersTable() {
                 </div>
             </CardHeader>
 
-            <CardBody className='overflow-scroll px-0'>
-                <table className='mt-4 w-full min-w-max table-auto text-left overflow-y-scroll'>
+            <CardBody className='overflow-hidden px-0'>
+                <table className='mt-4 w-full min-w-max table-auto text-left overflow-hidden'>
                     <thead>
                         <tr>
                             {TABLE_HEAD.map((head, index) => (
@@ -145,13 +148,14 @@ export function MembersTable() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredTasks.map(({ id, iconUrl, title, description, priority, status, deadline }) => (
-                            <tr key={id}>
+                        {filteredTasks.map(({ _id, iconUrl, title, description, type, status, deadline }) => {
+
+                            return (
+                                <tr key={_id}>
                                 <td className='p-4'>
                                     <div className='flex items-center gap-3'>
                                         <Avatar
                                             src={iconUrl}
-                                            alt={title}
                                             size='sm'
                                         />
                                         <div>
@@ -179,9 +183,9 @@ export function MembersTable() {
                                             color='blue-gray'
                                             className='font-normal'
                                         >
-                                            {status === 'normal'
-                                                ? 'Bình thường'
-                                                : 'Quan trọng'}
+                                            {type === 'emergency'
+                                                ? 'Quan trọng'
+                                                : 'Bình thường'}
                                         </Typography>
                                     </div>
                                 </td>
@@ -189,7 +193,7 @@ export function MembersTable() {
                                     <Tooltip content={status === 'completed' ? 'Đã hoàn thành' : 'Đánh dấu là hoàn thành'}>
                                         <IconButton
                                             variant="text"
-                                            onClick={() => handleToggleTaskStatus(id, status)}
+                                            onClick={() => handleToggleTaskStatus(_id, status)}
                                         >
                                             <Checkbox checked={status === 'completed'} />
                                         </IconButton>
@@ -208,7 +212,8 @@ export function MembersTable() {
                                     </Tooltip>
                                 </td>
                             </tr>
-                        ))}
+                            );
+                        })}  
                     </tbody>
                 </table>
             </CardBody>

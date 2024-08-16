@@ -6,6 +6,7 @@ import { SimpleFooter } from '../../components/Footer';
 import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
+import { fetchTasks } from '../../redux/actions/TaskSlice'; // Import the fetchTasks action
 
 export default function SimpleRegistrationForm() {
 
@@ -16,33 +17,44 @@ export default function SimpleRegistrationForm() {
 	const [password, setPassword] = useState('');
 
 	const { status, loading, error } = useSelector((state) => state.authLogin);
-
+	const errorCode = useSelector((state) => state.authLogin.errorCode);
 	useEffect(() => {
-		if (error) {
-			toast.error(error);
+		if (errorCode) {
+			switch (errorCode) {
+				case 400:
+					toast.error('Yêu cầu không hợp lệ.');
+					break;
+				case 401:
+					toast.error('Tài khoản hoặc mật khẩu không đúng.');
+					break;
+				case 403:
+					toast.error('Không có quyền truy cập.');
+					break;
+				case 404:
+					toast.error('Tài khoản không tồn tại.');
+					break;
+				case 500:
+					toast.error('Lỗi máy chủ.');
+					break;
+				default:
+					toast.error('Đã có lỗi xảy ra.');
+					break;
+			}
 		}
-	}, [error]);
-
+	}, [errorCode]); 
 
 
 
 	const handleSubmit = async (e) => {
-		try {
-			e.preventDefault();
-			await dispatch(login({ email, password })).then((result) => {
-				if (status === 'succeeded') {
-					toast.success('Login successful');
-					setEmail('');
-					setPassword('');
-					navigate('/dashboard');
-				}
-			}
-			);
+		e.preventDefault();
+		await dispatch(login({ email, password }));
+		if (status === 'succeeded') {
+			navigate('/dashboard');
+			dispatch(fetchTasks());
+			toast.success('Login successful');
+			setEmail('');
+			setPassword('');
 		}
-		catch (error) {
-			console.log(error);
-		}
-
 	};
 
 	return (

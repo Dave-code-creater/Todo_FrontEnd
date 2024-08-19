@@ -52,7 +52,23 @@ export function MembersTable() {
 
   // Handle case when no members are found
   if (members.length === 0) {
-    return <p>No members found yet. Add some employees or admins to see them here.</p>;
+    return <Card className="h-full w-full pb-2 mt-8">
+    <CardHeader floated={false} shadow={false} className="rounded-none">
+      <div className="mb-8 flex items-center justify-between gap-8">
+        <div>
+          <Typography variant="h5" color="blue-gray">
+            {companies.name}
+          </Typography>
+          <Typography color="gray" className="mt-1 font-normal">
+            Bạn chưa tham gia vào nhóm nào
+          </Typography>
+        </div>
+        <Button className="flex items-center">
+          <DialogDefault />
+        </Button>
+      </div>
+    </CardHeader>
+  </Card>
   }
 
 

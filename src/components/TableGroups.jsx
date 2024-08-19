@@ -21,20 +21,20 @@ const TABLE_HEAD = ["Member", "Role", "Employed", ""];
 
 export function MembersTable() {
   const dispatch = useDispatch();
-  
+
   const id = useSelector((state) => state.authLogin.user.userId);
   const companies = useSelector((state) => state.companyAction.companies);
-  const employees = useSelector((state) => state.companyAction.companies.employees); // Array of employee IDs
-  const admins = useSelector((state) => state.companyAction.companies.admin); // Array of admin IDs
+  const employees = useSelector((state) => state.companyAction.companies?.employees ?? []); // Array of employee IDs
+  const admins = useSelector((state) => state.companyAction.companies?.admin ?? []); // Array of admin IDs
   const users = useSelector((state) => state.userAction.users); // Fetched user details
-  
+
   // Fetch companies if not already in state
   useEffect(() => {
-    if (id && companies.length === 0) {  
-      dispatch(fetchCompanies(id));  
+    if (id && companies.length === 0) {
+      dispatch(fetchCompanies(id));
     }
   }, [id, companies, dispatch]);
-  
+
   // Fetch details for all employees and admins
   useEffect(() => {
     if (employees.length > 0) {
@@ -46,7 +46,16 @@ export function MembersTable() {
   }, [employees, admins, dispatch]);
 
   // Combine employees and admins into one list
-  const members = employees.concat(admins).map((memberId) => users.find((user) => user._id === memberId));
+  const members = [...employees, ...admins]
+    .map((memberId) => users.find((user) => user._id === memberId))
+    .filter((user) => user !== undefined); // Make sure only valid users are mapped
+
+  // Handle case when no members are found
+  if (members.length === 0) {
+    return <p>No members found yet. Add some employees or admins to see them here.</p>;
+  }
+
+
 
   return (
     <div className="flex flex-col">
@@ -99,7 +108,7 @@ export function MembersTable() {
 
                     // Check if the member is an admin
                     const isAdmin = admins.includes(member._id);
-                    
+
                     return (
                       <tr key={member._id}>
                         <td className="border-y border-blue-gray-100 p-4">

@@ -7,6 +7,7 @@ import PrivateRoute from '../route/PrivateRoute';
 import Profile from '../pages/Profile/Profile';
 import FAQ from "../pages/FAQ/FAQ";
 import Download from '../pages/Download Page/Download';
+import Group from '../pages/Group/Group';
 const routes = [
 	{
 		path: '/',
@@ -41,9 +42,17 @@ const routes = [
 		),
 	},
 	{
+		path: '/group',
+		element: (
+			<PrivateRoute>
+				<Group />
+			</PrivateRoute>
+		),
+	},
+	{
 		path: '/download',
 		element: <Download />,
-	}
+	},
 ];
 
 export default routes;

@@ -10,8 +10,6 @@ export const login = createAsyncThunk(
             if (response.status === 200) {
                 localStorage.setItem('accessToken', response.data.accessToken);
                 localStorage.setItem('refreshToken', response.data.refreshToken);
-                
-
                 return response.data;
             } else {
                 return rejectWithValue({
@@ -33,8 +31,9 @@ export const register = createAsyncThunk(
     async ({ username, email, password }, { rejectWithValue }) => {
         try {
             const response = await signup({ username, email, password });
-            if (response.status === 201) {
-
+            if (response.status === 200) {
+                localStorage.setItem('accessToken', response.data.accessToken);
+                localStorage.setItem('refreshToken', response.data.refreshToken);
                 return response.data;
             } else {
                 return rejectWithValue({
@@ -90,7 +89,7 @@ const authSlice = createSlice({
                 state.user = null;
                 state.error = action.error.message;
                 state.status = 'failed';
-                state.errorCode = action.error.code;
+                state.errorCode = action.payload.code;
             })
             .addCase(register.pending, (state) => {
                 state.loading = true;
@@ -101,17 +100,17 @@ const authSlice = createSlice({
             })
             .addCase(register.fulfilled, (state, action) => {
                 state.loading = false;
-                state.user = action.payload;
+                state.user = jwtDecode(action.payload.accessToken);
                 state.error = null;
                 state.status = 'succeeded';
-                state.errorCode = 201;
+                state.errorCode = 200;
             })
             .addCase(register.rejected, (state, action) => {
                 state.loading = false;
                 state.user = null;
                 state.error = action.error.message;
                 state.status = 'failed';
-                state.errorCode = action.error.code;
+                state.errorCode = action.payload.code;
             })
             .addCase(logout.pending, (state) => {
                 state.loading = true;

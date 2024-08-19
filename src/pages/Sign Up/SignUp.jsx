@@ -8,7 +8,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function SimpleRegistrationForm() {
-	const { loading, error } = useSelector((state) => state.authLogin);
+	const { loading, error, status } = useSelector((state) => state.authLogin);
+	const {errorCode} = useSelector((state) => state.authLogin);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -16,31 +17,41 @@ export default function SimpleRegistrationForm() {
 	const [password, setPassword] = useState('');
 	const [username, setUsername] = useState('');
 
+
 	useEffect(() => {
-		if (loading === 'succeeded') {
-			navigate('/dashboard');
-		} else if (error) {
-			if (error.includes('409')) {
-				toast.error('Tài khoản đã tồn tại');
-			} else toast.error(`Registration failed: ${error}`);
+		if (errorCode) {
+			switch (errorCode) {
+				case 200:
+					toast.success('Đăng ký thành công.');
+					navigate('/dashboard');
+					break;
+				case 400:
+					toast.warning('Mật khẩu không hợp lệ.');
+					break;
+				case 401:
+				case 409:
+					if (error === 'Email already exists') {
+						toast.warning('Email đã tồn tại.');
+					} else if (error === 'Username already exists') {
+						toast.warning('Tên người dùng đã tồn tại.');
+					} else {
+						toast.warning('Tài khoản đã tồn tại.');
+						break;
+					}
+				case 500:
+					toast.warning('Lỗi máy chủ.');
+					break;
+				default:
+					toast.warning('Đã có lỗi xảy ra.');
+					break;
+			}
 		}
-	}, [loading, error, navigate]);
+	}, [errorCode]);
+
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		const response = await dispatch(
-			register({ email, password, username })
-		);
-		localStorage.setItem('accessToken', response.payload.accessToken);
-		localStorage.setItem('refreshToken', response.payload.refreshToken);
-
-		if (response.payload.refreshToken && response.payload.accessToken) {
-			navigate('/dashboard');
-		}
-
-		setEmail('');
-		setPassword('');
-		setUsername('');
+		await dispatch(register({ email, password, username }));
 	};
 
 	return (

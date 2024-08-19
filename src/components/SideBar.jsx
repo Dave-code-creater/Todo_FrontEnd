@@ -5,14 +5,7 @@ import {
 	List,
 	ListItem,
 	ListItemPrefix,
-	ListItemSuffix,
-	Chip,
-	Accordion,
-	AccordionHeader,
-	AccordionBody,
-	Alert,
-	Input,
-	Button,
+
 } from '@material-tailwind/react';
 import {
 	PresentationChartBarIcon,
@@ -39,6 +32,9 @@ export default function MultiLevelSidebar() {
 	}
 	const handleNavbar = () => {
 		navigate('/dashboard');
+	}
+	const handleGroup = () => {
+		navigate('/group');
 	}
 
 	return (
@@ -96,8 +92,8 @@ export default function MultiLevelSidebar() {
 					</ListItemPrefix>
 					<Typography
 						variant='button'
-						onClick={() => alert('Settings')}>
-						Cài đặt
+						onClick={() => handleGroup()}>
+						Tạo nhóm
 					</Typography>
 				</ListItem>
 

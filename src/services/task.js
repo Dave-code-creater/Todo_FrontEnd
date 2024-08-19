@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-	baseURL: 'https://server-mu-beige.vercel.app/api',
+	baseURL: 'https://server-mu-beige.vercel.app/api/task',
 	withCredentials: true,
 	headers: {
 		'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ API.interceptors.request.use(
 );
 
 export const getTasks = async (id) =>
-	API.get(`/task/${id}`, {
+	API.get(`/${id}`, {
 		headers: {
 			Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
 		},
@@ -38,7 +38,7 @@ export const addTask = async ({
 	deadline,
 }) =>
 	API.post(
-		`/task/${userId}/`, // Verify this endpoint in your API
+		`/${userId}`, // Verify this endpoint in your API
 		{
 			title,
 			description,
@@ -54,8 +54,8 @@ export const addTask = async ({
 		}
 	);
 
-export const deleteTask = async (id) =>
-	API.delete(`/task/${id}`, {
+export const removeTask = async (id) =>
+	API.delete(`/${id}`, {
 		// Adjust endpoint if needed
 		headers: {
 			Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
@@ -71,7 +71,7 @@ export const updateTask = async ({
 	type,
 }) =>
 	API.put(
-		`/task/${id}`, // Adjust endpoint if needed
+		`/${id}`, // Adjust endpoint if needed
 		{
 			title,
 			description,
@@ -85,16 +85,16 @@ export const updateTask = async ({
 			},
 		}
 	);
-	export const updateTaskStatus = async ({ id, status }) =>
-		API.put(
-			`/${id}/status`, // Adjust endpoint if needed
-			{
-				status,
+export const updateTaskStatus = async ({ id, status }) =>
+	API.put(
+		`/${id}/status`, // Adjust endpoint if needed
+		{
+			status,
+		},
+		{
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
 			},
-			{
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
-				},
-			}
-		);
-		
+		}
+	);
+	

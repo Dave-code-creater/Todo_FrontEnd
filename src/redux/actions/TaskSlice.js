@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getTasks, addTask, deleteTask, updateTask, updateTaskStatus } from '../../services/task';
+import { getTasks, addTask, updateTask } from '../../services/task';
 // Action creators
 export const fetchTasks = createAsyncThunk('task/:id', async (userId) => {
 	
@@ -23,18 +23,12 @@ export const addNewTask = createAsyncThunk(
 	}
 );
 
-export const removeTask = createAsyncThunk(
-	'task/removeTask',
-	async ({ token, id }) => {
-		const response = await deleteTask({ token, id });
-		return id; // Returning the ID for easier state update
-	}
-);
 
-export const updateTaskContent = createAsyncThunk(
-	'task/updateTaskContent',
-	async ({ id, content }) => {
-		const response = await updateTask({ id, content });
+
+export const updateStatus = createAsyncThunk(
+	'task/updateTaskStatus',
+	async ({  id, status }) => {
+		const response = await updateTask({  id, status });
 		return response.data;
 	}
 );
@@ -52,14 +46,7 @@ const taskSlice = createSlice({
 		setFilter(state, action) {
 			state.filter = action.payload;
 		},
-		toggleTaskStatus(state, action) {
-			const { id, newStatus } = action.payload;
-			const task = state.tasks.find((task) => task.id === id);
-			updateTaskStatus({ id, status: newStatus });
-			if (task) {
-				task.status = newStatus;
-			}
-		},
+		
 	},
 	extraReducers: (builder) => {
 		builder
@@ -85,35 +72,23 @@ const taskSlice = createSlice({
 				state.status = 'failed';
 				state.error = action.error.message;
 			})
-			.addCase(removeTask.pending, (state) => {
+			.addCase(updateStatus.pending, (state) => {
 				state.status = 'loading';
 			})
-			.addCase(removeTask.fulfilled, (state, action) => {
-				state.status = 'succeeded';
-				state.tasks = state.tasks.filter(
-					(task) => task.id !== action.payload
-				);
-			})
-			.addCase(removeTask.rejected, (state, action) => {
-				state.status = 'failed';
-				state.error = action.error.message;
-			})
-			.addCase(updateTaskContent.pending, (state) => {
-				state.status = 'loading';
-			})
-			.addCase(updateTaskContent.fulfilled, (state, action) => {
+			.addCase(updateStatus.fulfilled, (state, action) => {
 				state.status = 'succeeded';
 				state.tasks = state.tasks.map((task) =>
-					task.id === action.payload.id
-						? { ...task, content: action.payload.content }
+					task._id === action.payload._id
+						? { ...task, status: action.payload.status }
 						: task
 				);
 			})
-			.addCase(updateTaskContent.rejected, (state, action) => {
+			.addCase(updateStatus.rejected, (state, action) => {
 				state.status = 'failed';
 				state.error = action.error.message;
-			});
+			})
+			
 	},
 });
-export const { setTasks, setFilter, toggleTaskStatus } = taskSlice.actions;
+export const { setTasks, setFilter } = taskSlice.actions;
 export default taskSlice.reducer;

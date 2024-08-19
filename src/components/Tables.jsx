@@ -22,8 +22,7 @@ import {
 } from '@material-tailwind/react';
 import { DialogWithForm } from './AddTask';
 import { useDispatch, useSelector } from 'react-redux';
-import { setFilter, toggleTaskStatus } from '../redux/actions/TaskSlice';
-import { fetchTasks } from '../redux/actions/TaskSlice';
+import { fetchTasks, setFilter, updateStatus } from '../redux/actions/TaskSlice';
 import { tr } from 'date-fns/locale';
 
 const TABS = [
@@ -49,7 +48,7 @@ export function MembersTable() {
 
     useEffect(() => {
         dispatch(fetchTasks(id)); // Fetch tasks on component mount
-    }, [dispatch,tasks]);
+    }, [ dispatch]);
 
     const filteredTasks = useMemo(() => {
         switch (filter) {
@@ -62,12 +61,11 @@ export function MembersTable() {
         }
     }, [filter, tasks]);
 
-    const handleToggleTaskStatus = (taskId, currentStatus) => {
+    const handleToggleTaskStatus = (id, currentStatus) => {
         const newStatus = currentStatus === 'completed' ? 'in-progress' : 'completed';
-
-        dispatch(toggleTaskStatus({ id: taskId, newStatus })); // Dispatch action to update task status in Redux store and DB
-        return <Checkbox checked={newStatus === 'completed'} />;
+        dispatch(updateStatus({ id, status: newStatus }));
     };
+
 
     const [isDialogOpenAddTask, setIsDialogOpenAddTask] = useState(false);
 
@@ -190,7 +188,7 @@ export function MembersTable() {
                                     </div>
                                 </td>
                                 <td className="p-4">
-                                    <Tooltip content={status === 'completed' ? 'Đã hoàn thành' : 'Đánh dấu là hoàn thành'}>
+                                    <Tooltip content={status === 'completed' ? 'Đánh dấu là hoàn thành' : 'Đánh dấu là chưa hoàn thành'}>
                                         <IconButton
                                             variant="text"
                                             onClick={() => handleToggleTaskStatus(_id, status)}

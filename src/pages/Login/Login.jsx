@@ -6,8 +6,6 @@ import { SimpleFooter } from '../../components/Footer';
 import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
-import { fetchTasks } from '../../redux/actions/TaskSlice'; // Import the fetchTasks action
-
 export default function SimpleRegistrationForm() {
 
 	const dispatch = useDispatch();
@@ -16,11 +14,15 @@ export default function SimpleRegistrationForm() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
-	const { status, loading, error } = useSelector((state) => state.authLogin);
-	const errorCode = useSelector((state) => state.authLogin.errorCode);
+	const { status, errorCode } = useSelector((state) => state.authLogin);
+	
 	useEffect(() => {
 		if (errorCode) {
 			switch (errorCode) {
+				case 200:
+					toast.success('Đăng nhập thành công.');
+					navigate('/dashboard');
+					break;
 				case 400:
 					toast.error('Yêu cầu không hợp lệ.');
 					break;
@@ -48,13 +50,6 @@ export default function SimpleRegistrationForm() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		await dispatch(login({ email, password }));
-		if (status === 'succeeded') {
-			navigate('/dashboard');
-			dispatch(fetchTasks());
-			toast.success('Login successful');
-			setEmail('');
-			setPassword('');
-		}
 	};
 
 	return (

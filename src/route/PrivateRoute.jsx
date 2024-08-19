@@ -1,10 +1,11 @@
 // PrivateRoute.js
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const PrivateRoute = ({ children }) => {
-	const isAuthenticated = !!localStorage.getItem('refreshToken'); // Ensure to convert to boolean
-
+	const isAuthenticated = !!useSelector((state) => state.authLogin.user);
+	
 	if (!isAuthenticated) {
 		return <Navigate to='/login' />;
 	}

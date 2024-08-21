@@ -2,7 +2,7 @@ import axios from 'axios';
 
 
 const API = axios.create({
-	baseURL: 'https://server-mu-beige.vercel.app/api/company',
+	baseURL: 'https://server-mu-beige.vercel.app/api/group',
 	withCredentials: true,
 	headers: {
 		'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export const getEmployeeByCompanyUUID = async (companyUUID) => {
 };
 
 export const createCompany = async (company) => {
-    
+    console.log(company);
     const response = await API.post('/', { ...company }, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('accessToken')}`,

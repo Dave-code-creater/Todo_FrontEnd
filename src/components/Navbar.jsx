@@ -61,7 +61,7 @@ export function NavbarDefault() {
 					/>
 				</svg>
 				<a
-					href='#'
+					href='/dashboard'
 					className='flex text-black items-center'>
 					Tài Khoản
 				</a>

@@ -8,6 +8,8 @@ import Profile from '../pages/Profile/Profile';
 import FAQ from "../pages/FAQ/FAQ";
 import Download from '../pages/Download Page/Download';
 import Group from '../pages/Group/Group';
+import ContactSection from "../pages/Contact/Contact";
+import { LicenseSection } from '../pages/License/License';
 const routes = [
 	{
 		path: '/',
@@ -53,6 +55,14 @@ const routes = [
 		path: '/download',
 		element: <Download />,
 	},
+	{
+		path: '/contact',
+		element: <ContactSection />,
+	},
+	{
+		path: '/license',
+		element: <LicenseSection />,
+	}
 ];
 
 export default routes;

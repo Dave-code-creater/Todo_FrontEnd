@@ -7,82 +7,105 @@ import {
   Typography,
   Button,
   CardBody,
-  Chip,
   Avatar,
   IconButton,
   Tooltip,
 } from "@material-tailwind/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCompanies } from '../redux/actions/CompanySlice';
 import { fetchUserById } from '../redux/actions/UserSlice';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { MembersTable } from "./Tables";
+import { fetchTasks } from '../redux/actions/TaskSlice';
 
 const TABLE_HEAD = ["Member", "Role", "Employed", ""];
 
-export function MembersTable() {
+export function GroupTable() {
   const dispatch = useDispatch();
-
-  const id = useSelector((state) => state.authLogin.user.userId);
+  const [userStates, setUserStates] = useState({});
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const currentUserId = useSelector((state) => state.authLogin.user.userId);
   const companies = useSelector((state) => state.companyAction.companies);
-  const employees = useSelector((state) => state.companyAction.companies?.employees ?? []); // Array of employee IDs
-  const admins = useSelector((state) => state.companyAction.companies?.admin ?? []); // Array of admin IDs
-  const users = useSelector((state) => state.userAction.users); // Fetched user details
+  const users = useSelector((state) => state.userAction.users);
 
-  // Fetch companies if not already in state
   useEffect(() => {
-    if (id && companies.length === 0) {
-      dispatch(fetchCompanies(id));
-    }
-  }, [id, companies, dispatch]);
+    dispatch(fetchCompanies(currentUserId));
+  }, [dispatch, currentUserId]);
 
-  // Fetch details for all employees and admins
   useEffect(() => {
-    if (employees.length > 0) {
-      employees.forEach((employee) => dispatch(fetchUserById(employee)));
+    if (companies.length) {
+      companies.forEach((company) => {
+        company.employees.forEach((employeeId) => {
+          dispatch(fetchUserById(employeeId));
+        });
+        company.admin.forEach((adminId) => {
+          dispatch(fetchUserById(adminId));
+        });
+      });
     }
-    if (admins.length > 0) {
-      admins.forEach((admin) => dispatch(fetchUserById(admin)));
+  }, [companies, dispatch]);
+
+  useEffect(() => {
+    if (selectedUserId) {
+      console.log('Fetching tasks for user:', selectedUserId);
+      dispatch(fetchTasks(selectedUserId));
     }
-  }, [employees, admins, dispatch]);
+  }, [selectedUserId, dispatch]);
 
-  // Combine employees and admins into one list
-  const members = [...employees, ...admins]
-    .map((memberId) => users.find((user) => user._id === memberId))
-    .filter((user) => user !== undefined); // Make sure only valid users are mapped
+  const handleButtonClick = (userId) => {
+    setSelectedUserId((prevSelectedUserId) =>
+      prevSelectedUserId === userId ? null : userId
+    );
+  };
 
-  // Handle case when no members are found
-  if (members.length === 0) {
-    return <Card className="h-full w-full pb-2 mt-8">
-    <CardHeader floated={false} shadow={false} className="rounded-none">
-      <div className="mb-8 flex items-center justify-between gap-8">
-        <div>
-          <Typography variant="h5" color="blue-gray">
-            {companies.name}
-          </Typography>
-          <Typography color="gray" className="mt-1 font-normal">
-            Bạn chưa tham gia vào nhóm nào
-          </Typography>
-        </div>
-        <Button className="flex items-center">
-          <DialogDefault />
-        </Button>
-      </div>
-    </CardHeader>
-  </Card>
+  const copyUUIDIntoClipboard = (companyUUID) => {
+    if (document.hasFocus()) {
+      navigator.clipboard.writeText(companyUUID)
+        .then(() => {
+          toast.success('UUID copied to clipboard');
+        })
+        .catch((error) => {
+          console.error('Failed to copy UUID:', error);
+          toast.error('Failed to copy UUID');
+        });
+    } else {
+      console.error('Document is not focused');
+      toast.error('Cannot copy UUID, document is not focused');
+    }
+  };
+
+  if (companies.length === 0) {
+    return (
+      <Card className="h-full w-full pb-2 mt-8">
+        <CardHeader floated={false} shadow={false} className="rounded-none">
+          <div className="mb-8 flex items-center justify-between gap-8">
+            <div>
+              <Typography color="gray" className="mt-1 font-normal">
+                Bạn chưa tham gia vào nhóm nào
+              </Typography>
+            </div>
+            <div className="flex items-center">
+              <DialogDefault />
+            </div>
+          </div>
+        </CardHeader>
+      </Card>
+    );
   }
-
-
 
   return (
     <div className="flex flex-col">
-      {companies && companies.name ? (
-        <div className="mt-8">
-          <Card className="h-full w-full pb-2">
+      <ToastContainer />
+      {companies.map((company) => (
+        <div key={company._id} className="mt-8">
+          <Card className="h-full w-full">
             <CardHeader floated={false} shadow={false} className="rounded-none">
               <div className="mb-8 flex items-center justify-between gap-8">
                 <div>
                   <Typography variant="h5" color="blue-gray">
-                    {companies.name}
+                    {company.name}
                   </Typography>
                   <Typography color="gray" className="mt-1 font-normal">
                     Thông tin chi tiết về thành viên
@@ -92,8 +115,13 @@ export function MembersTable() {
                   <Button variant="outlined" size="sm">
                     Xem tất cả
                   </Button>
-                  <Button className="flex items-center gap-3" size="sm">
-                    <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Thêm thành viên
+                  <Button
+                    className="flex items-center gap-3"
+                    size="sm"
+                    onClick={() => copyUUIDIntoClipboard(company.companyUUID)}
+                  >
+                    <UserPlusIcon strokeWidth={2} className="h-4 w-4" />
+                    Mã nhóm
                   </Button>
                 </div>
               </div>
@@ -118,79 +146,71 @@ export function MembersTable() {
                     ))}
                   </tr>
                 </thead>
-                <tbody>
-                  {members.map((member) => {
-                    if (!member) return null; // Skip if no user data is found
-
-                    // Check if the member is an admin
-                    const isAdmin = admins.includes(member._id);
+                <tbody className="text-sm divide-y">
+                  {users.map((user) => {
+                    const isAdmin = company.admin.includes(user._id);
+                    const isEmployee = company.employees.includes(user._id);
+                    const isCurrentUserAdmin = company.admin.includes(currentUserId);
 
                     return (
-                      <tr key={member._id}>
+                      <tr key={user._id}>
                         <td className="border-y border-blue-gray-100 p-4">
                           <div className="flex items-center gap-4">
-                            <Avatar src={member.img} alt={member.username} size="sm" />
+                            <Avatar src={user.img} alt={user.username} size="sm" />
                             <div>
                               <Typography color="blue-gray" className="font-semibold">
-                                {member.username} {isAdmin && <Chip value="Admin" color="green" size="sm" />}
+                                {user.username}
                               </Typography>
                               <Typography color="blue-gray" className="font-normal">
-                                {member.email}
+                                {user.email}
                               </Typography>
                             </div>
                           </div>
                         </td>
                         <td className="border-y border-blue-gray-100 p-4">
-                          <Typography color="blue-gray" className="font-semibold">
-                            {isAdmin ? "Admin" : "Employee"}
-                          </Typography>
+                          {isAdmin ? "Admin" : "Employee"}
                         </td>
                         <td className="border-y border-blue-gray-100 p-4">
-                          <Typography color="blue-gray" className="font-semibold">
-                            {member.createdAt}
-                          </Typography>
+                          {isEmployee ? "Yes" : "No"}
                         </td>
                         <td className="border-y border-blue-gray-100 p-4">
                           <div className="flex items-center gap-4">
-                            <Tooltip
-                              content="Edit"
-                              direction="left"
-                              className="rounded-md"
-                            >
+                            <Tooltip content="Edit">
                               <IconButton color="lightBlue" size="sm">
                                 <PencilIcon className="h-5 w-5" />
                               </IconButton>
                             </Tooltip>
+                            {isCurrentUserAdmin && (
+                              <Tooltip content="Xem chi tiết">
+                                <IconButton
+                                  color="lightBlue"
+                                  size="sm"
+                                  onClick={() => handleButtonClick(user._id)}
+                                >
+                                  <MagnifyingGlassIcon className="h-5 w-5" />
+                                </IconButton>
+                              </Tooltip>
+                            )}
+                            {selectedUserId === user._id && (
+                              <MembersTable id={user._id}/>
+                            )}
                           </div>
                         </td>
                       </tr>
                     );
                   })}
+                  
                 </tbody>
               </table>
+              
             </CardBody>
           </Card>
-          <DialogDefault />
         </div>
-      ) : (
-        <Card className="h-full w-full pb-2 mt-8">
-          <CardHeader floated={false} shadow={false} className="rounded-none">
-            <div className="mb-8 flex items-center justify-between gap-8">
-              <div>
-                <Typography variant="h5" color="blue-gray">
-                  {companies.name}
-                </Typography>
-                <Typography color="gray" className="mt-1 font-normal">
-                  Bạn chưa tham gia vào nhóm nào
-                </Typography>
-              </div>
-              <Button className="flex items-center">
-                <DialogDefault />
-              </Button>
-            </div>
-          </CardHeader>
-        </Card>
-      )}
+      ))}
+      
+      <div className="pb-2 mt-8">
+        <DialogDefault />
+      </div>
     </div>
   );
 }

@@ -42,7 +42,7 @@ const userSlice = createSlice({
             })
             .addCase(fetchUsers.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.users = action.payload;
+                state.users.push(action.payload);
             })
             .addCase(fetchUsers.rejected, (state, action) => {
                 state.status = 'failed';
@@ -53,9 +53,9 @@ const userSlice = createSlice({
             })
             .addCase(fetchUserById.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                if (state.users.findIndex((user) => user.id === action.payload.id) === -1)
+                if (state.users.findIndex((user) => user._id === action.payload._id) === -1)
                 {
-                    state.users = [...state.users, action.payload];
+                    state.users.push(action.payload);
                 }
                 
                 

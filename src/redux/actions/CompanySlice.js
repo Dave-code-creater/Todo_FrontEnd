@@ -57,8 +57,9 @@ const companySlice = createSlice({
             })
             .addCase(fetchCompanies.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.companies = action.payload;
-                
+                if(state.companies.findIndex((company) => company.id === action.payload.id) === -1) {
+                    state.companies.push(action.payload);
+                }
             })
             .addCase(fetchCompanies.rejected, (state, action) => {
                 state.status = 'failed';

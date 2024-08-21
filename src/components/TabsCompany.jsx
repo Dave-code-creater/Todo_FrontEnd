@@ -11,15 +11,16 @@ import {
   UserCircleIcon,
   Cog6ToothIcon,
 } from "@heroicons/react/24/solid";
-import {MembersTable} from './TableGroups';
+import {GroupTable} from './TableGroups';
 import Example from '../components/AddCompany';
+
 export function TabsWithIcon() {
   const data = [
     {
       label: "Nhóm của bạn",
       value: "dashboard",
       icon: Square3Stack3DIcon,
-      component: <MembersTable />,
+      component: <GroupTable />,
     },
     {
       label: "Tạo nhóm mới",

@@ -39,16 +39,15 @@ const TABLE_HEAD = [
     'Thay đổi',
 ];
 
-export function MembersTable() {
+export function MembersTable({id}) {
+    
     const dispatch = useDispatch();
     const tasks = useSelector((state) => state.taskAction.tasks);
     const filter = useSelector((state) => state.taskAction.filter);
-    const id = useSelector((state) => state.authLogin.user.userId);
-
 
     useEffect(() => {
         dispatch(fetchTasks(id)); // Fetch tasks on component mount
-    }, [ dispatch]);
+    }, [ id, dispatch]);
 
     const filteredTasks = useMemo(() => {
         switch (filter) {
@@ -59,7 +58,7 @@ export function MembersTable() {
             default:
                 return tasks;
         }
-    }, [filter, tasks]);
+    }, [filter, tasks, id]);
 
     const handleToggleTaskStatus = (id, currentStatus) => {
         const newStatus = currentStatus === 'completed' ? 'in-progress' : 'completed';
